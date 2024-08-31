@@ -1,4 +1,4 @@
-import {getProductsDb, getProductDb, insertProductDb, deleteProductDb, updateProductDb, bookProductDb} from '../model/productsDb.js'
+import {getProductsDb, getProductDb, insertProductDb, deleteProductDb, updateProductDb, } from '../model/productsDb.js'
 import { getUsersDb } from '../model/usersDb.js'
 
 const getProducts = async (req, res) => {
@@ -6,8 +6,10 @@ const getProducts = async (req, res) => {
 }
 
 const getProduct = async (req, res) => {
-    res.json(await getProductDb(req.params.id))
-  }
+    const productId = req.params.id;
+    const product = await getProductDb(productId);
+    res.json(product);
+  };
 
 const insertProduct = async (req, res) => {
     let { prodName, quantity, amount, Category, prodUrl, prodDescription } = req.body
@@ -33,15 +35,15 @@ const updateProduct = async(req,res)=>{
     res.send('Update was successful')
 }
   
-const bookProduct = async (req,res)=>{
-    console.log(req.body);
-    let {prodID} = await getUsersDb(req.body.user)
-    console/log(prodID)
-    await bookProductDb(req.body.id,user_id)
-    res.json({message:"Item added to cart!"})
-}
+// const bookProduct = async (req,res)=>{
+//     console.log(req.body);
+//     let {prodID} = await getUsersDb(req.body.user);
+//     console.log(prodID);
+//     await bookProductDb(req.body.id, prodID);
+//     res.json({message:"Successfully booked!"})
+// }
 
-export {getProducts, getProduct, insertProduct, deleteProduct, updateProduct, bookProduct}
+export {getProducts, getProduct, insertProduct, deleteProduct, updateProduct, }
 
 
 // const updateProduct = async (req, res) => {

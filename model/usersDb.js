@@ -11,12 +11,21 @@ const getUserDb = async (emailAdd) => {
   return data;
 }
 
-const insertUserDb = async(firstName, lastName, userAge, Gender, userRole, emailAdd, userPass, userProfile) =>{
+const insertUserDb = async (firstName, lastName, userAge, Gender, userRole, emailAdd, userPass, userProfile) => {
+  try {
+    const existingUser = await getUserDb(emailAdd);
+    if (existingUser.length > 0) {
+      throw new Error(`User with email ${emailAdd} already exists`);
+    }
     await pool.query(`
-        INSERT INTO users
-        (firstName, lastName, userAge, Gender,  userRole, emailAdd, userPass, userProfile)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        `,[firstName, lastName, userAge, Gender, userRole, emailAdd, userPass, userProfile])
+      INSERT INTO users
+      (firstName, lastName, userAge, Gender,  userRole, emailAdd, userPass, userProfile)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+      `,[firstName, lastName, userAge, Gender, userRole, emailAdd, userPass, userProfile])
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 }
 
 const deleteUserDb = async (userID) => {

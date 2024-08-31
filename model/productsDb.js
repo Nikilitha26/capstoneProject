@@ -30,11 +30,11 @@ const updateProductDb = async (prodID, prodName, quantity, amount, Category, pro
     `, [prodName, quantity, amount, Category, prodUrl, prodDescription, prodID]);
 };
 
-const bookProductDb = async (userID, prodID) => {
-    await pool.query(`
-      INSERT INTO cart (userID, prodID) VALUES (?,?)
-    `, [userID, prodID]);
-};
+// const bookProductDb = async (userID, prodID) => {
+//     await pool.query(`
+//       INSERT INTO cart (userID, prodID) VALUES (?,?)
+//     `, [userID, prodID]);
+// };
 
 // const getAvailableDatesDb = async (prodID) => {
 //   let [data] = await pool.query('SELECT available_dates FROM products WHERE prodID = ?', [prodID]);
@@ -42,4 +42,4 @@ const bookProductDb = async (userID, prodID) => {
 // };
 
 
-export {getProductsDb, getProductDb, insertProductDb, deleteProductDb, updateProductDb, bookProductDb};
+export {getProductsDb, getProductDb, insertProductDb, deleteProductDb, updateProductDb, };

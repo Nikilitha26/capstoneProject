@@ -43,7 +43,11 @@ const updateUser = async (req, res) => {
   Gender ? Gender = Gender : Gender = user.Gender;
   userRole ? userRole = userRole : userRole = user.userRole;
   emailAdd ? emailAdd = emailAdd : emailAdd = user.emailAdd;
-  userPass ? userPass = userPass : userPass = user.userPass;
+  if (userPass) {
+    userPass = await hash(userPass, 10);
+  } else {
+    userPass = user.userPass;
+  }
   userProfile ? userProfile = userProfile : userProfile = user.userProfile;
   await updateUserDb(userID, firstName, lastName, userAge, Gender, userRole, emailAdd, userPass, userProfile);
   res.send('Update was successful');

@@ -1,14 +1,14 @@
 import express from 'express'
-import {getProducts, getProduct, insertProduct, deleteProduct, updateProduct, bookProduct} from '../contoller/productController.js'
+import {getProducts, getProduct, insertProduct, deleteProduct, updateProduct, } from '../contoller/productController.js'
 import { verifyAToken } from '../middleware/authenticate.js'
 // import { bookProduct } from '../model/productsDb.js'
 
 const router = express.Router()
 
-router.post('/order',verifyAToken, bookProduct, (req,res)=>{
-    console.log(req.body)
-    res.json({message:"item added to cart"})
-})
+// router.post('/order',verifyAToken, bookProduct, (req,res)=>{
+//     console.log(req.body)
+//     res.json({message:"item added to cart"})
+// })
 
 router.
     route('/')
