@@ -5,7 +5,7 @@ import {config} from 'dotenv'
 config()
 
 
-const checkUser = async (req, res, next) => {
+const checkUser = async (req, res) => {
   const { emailAdd, userPass } = req.body;
   const user = (await getUserDb(emailAdd))[0];
 
@@ -25,7 +25,7 @@ const checkUser = async (req, res, next) => {
 
   if (result) {
     let token = jwt.sign({ emailAdd: emailAdd }, process.env.SECRET_KEY, { expiresIn: '1h' });
-    res.json({ token: token });
+    res.json({ token: token, message: 'You have signed in!!' });
   } else {
     res.status(401).json({ error: 'Password incorrect' });
   }

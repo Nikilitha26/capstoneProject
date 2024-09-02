@@ -30,12 +30,34 @@ const updateProductDb = async (prodID, prodName, quantity, amount, Category, pro
     `, [prodName, quantity, amount, Category, prodUrl, prodDescription, prodID]);
 };
 
-// const bookProductDb = async (userID, prodID) => {
-//     await pool.query(`
-//       INSERT INTO cart (userID, prodID) VALUES (?,?)
-//     `, [userID, prodID]);
-// };
+const bookProductDb = async (userID, prodID) => {
+    try {
+      // Get the product's current quantity
+      let [[product]] = await pool.query('SELECT quantity FROM products WHERE prodID = ?', [prodID]);
+  
+      if (product.quantity <= 0) {
+        throw new Error('Product is out of stock');
+      }
+  
+      // Insert a new record into the orders table
+      await pool.query(`
+        INSERT INTO orders (userID, prodID) VALUES (?,?)
+      `, [userID, prodID]);
+  
+      // Update the product's quantity
+      await pool.query(`
+        UPDATE products
+        SET quantity = quantity - 1
+        WHERE prodID = ?
+      `, [prodID]);
+  
+      return true;
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
+  };
 
 
 
-export {getProductsDb, getProductDb, insertProductDb, deleteProductDb, updateProductDb, };
+export {getProductsDb, getProductDb, insertProductDb, deleteProductDb, updateProductDb, bookProductDb};

@@ -1,4 +1,4 @@
-import {getProductsDb, getProductDb, insertProductDb, deleteProductDb, updateProductDb, } from '../model/productsDb.js'
+import {getProductsDb, getProductDb, insertProductDb, deleteProductDb, updateProductDb,bookProductDb } from '../model/productsDb.js'
 import { getUsersDb } from '../model/usersDb.js'
 
 const getProducts = async (req, res) => {
@@ -35,12 +35,20 @@ const updateProduct = async(req,res)=>{
     res.send('Update was successful')
 }
   
-// const bookProduct = async (req,res)=>{
-//     console.log(req.body);
-//     let {prodID} = await getUsersDb(req.body.user);
-//     console.log(prodID);
-//     await bookProductDb(req.body.id, prodID);
-//     res.json({message:"Successfully booked!"})
-// }
+const bookProduct = async (req, res) => {
+    let userID = req.body.userID;
+    let prodID = req.body.prodID;
+    if (!userID || !prodID) {
+      res.status(400).json({ error: 'userID and prodID are required' });
+      return;
+    }
+    try {
+      await bookProductDb(userID, prodID);
+      res.json({ message: "Successfully booked!" });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Failed to book product' });
+    }
+  }
 
-export {getProducts, getProduct, insertProduct, deleteProduct, updateProduct, }
+export {getProducts, getProduct, insertProduct, deleteProduct, updateProduct, bookProduct }
