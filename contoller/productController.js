@@ -44,11 +44,3 @@ const updateProduct = async(req,res)=>{
 // }
 
 export {getProducts, getProduct, insertProduct, deleteProduct, updateProduct, }
-
-
-// const updateProduct = async (req, res) => {
-//     let product = await getProductDb(req.params.prodID)
-//     let updatedProduct = { ...product, ...req.body }
-//     await updateProductDb(req.params.prodID, updatedProduct.prodName, updatedProduct.quantity, updatedProduct.amount, updatedProduct.Category, updatedProduct.prodUrl, updatedProduct.prodDescription)
-//     res.send('Update was successful')
-//   }

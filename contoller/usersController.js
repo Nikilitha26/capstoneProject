@@ -1,7 +1,7 @@
 import {getUsersDb, getUserDb, insertUserDb, deleteUserDb, updateUserDb} from '../model/usersDb.js'
 import { checkUser } from '../middleware/authenticate.js';
-import { hash, compare } from 'bcrypt';
-
+import { hash, compare} from 'bcrypt';
+import bcrypt from 'bcrypt';
 
 const getUsers = async(req,res)=>{
     res.json(await getUsersDb());
@@ -12,16 +12,20 @@ const getUser = async(req,res)=>{
 }
 
 const insertUser = async (req, res) => {
-    try {
-      let { firstName, lastName, userAge, Gender, userRole, emailAdd, userPass, userProfile } = req.body;
-      const hashedPass = await hash(userPass, 10);
-      await insertUserDb(firstName, lastName, userAge, Gender, userRole, emailAdd,hashedPass, userProfile);
-      res.send('Data successfully inserted!');
-    } catch (err) {
-      console.error(err);
-      res.status(500).send('Error inserting user');
+  let { firstName, lastName, userAge, Gender, userRole, emailAdd, userPass, userProfile } = req.body
+  const hashedPass = await hash(userPass, 10);
+  try {
+    await insertUserDb(firstName, lastName, userAge, Gender, userRole, emailAdd, userProfile, hashedPass)
+    res.send('Data successfully inserted!')
+  } catch (error) {
+    if (error.message.includes('User with email')) {
+      res.status(400).send({ error: error.message });
+    } else {
+      console.error(error)
+      res.status(500).send('Error inserting user')
     }
-  };
+  }
+}
 
   const deleteUser = async (req, res) => {
     try {

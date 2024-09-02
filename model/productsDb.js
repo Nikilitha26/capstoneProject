@@ -36,10 +36,6 @@ const updateProductDb = async (prodID, prodName, quantity, amount, Category, pro
 //     `, [userID, prodID]);
 // };
 
-// const getAvailableDatesDb = async (prodID) => {
-//   let [data] = await pool.query('SELECT available_dates FROM products WHERE prodID = ?', [prodID]);
-//   return data;
-// };
 
 
 export {getProductsDb, getProductDb, insertProductDb, deleteProductDb, updateProductDb, };

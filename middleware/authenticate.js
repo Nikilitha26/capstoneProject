@@ -8,32 +8,28 @@ config()
 const checkUser = async (req, res, next) => {
   const { emailAdd, userPass } = req.body;
   const user = (await getUserDb(emailAdd))[0];
-  console.log('User:', user);
 
   if (!user) {
-    res.send('User not found');
+    res.status(401).json({ error: 'User not found' });
     return;
   }
 
   const hashedPass = user.userPass;
-  console.log('hashedPass:', hashedPass);
 
   if (!hashedPass) {
-    res.send('Hashed password not found');
+    res.status(401).json({ error: 'Hashed password not found' });
     return;
   }
 
   let result = await compare(userPass, hashedPass);
-    //  console.log(result);
-        if(result==true) {
-            let token = jwt.sign({emailAdd:emailAdd}, process.env.SECRET_KEY, {expiresIn:'1h'})
-            console.log(token)
-            res.json({ token: token });
-            next()
-            return
-        }
-        res.send('Password incorrect')
-        }
+
+  if (result) {
+    let token = jwt.sign({ emailAdd: emailAdd }, process.env.SECRET_KEY, { expiresIn: '1h' });
+    res.json({ token: token });
+  } else {
+    res.status(401).json({ error: 'Password incorrect' });
+  }
+};
 
 const verifyAToken = (req, res, next) => {
     try {
