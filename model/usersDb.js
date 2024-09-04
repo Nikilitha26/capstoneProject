@@ -41,8 +41,18 @@ const deleteUserDb = async (userID) => {
         [firstName, lastName, userAge, Gender, userRole, emailAdd, userProfile, hashedPass, userID])
   }
 // orders
+const getAllOrdersDb = async () => {
+  try {
+    const query = `SELECT * FROM orders`;
+    const [data] = await pool.query(query);
+    return data;
+  } catch (error) {
+    console.error('Error getting orders:', error);
+    throw error;
+  }
+};
 
-  const getAllOrdersDb = async (userID) => {
+  const getAllOrderDb = async (userID) => {
     try {
       const query = `SELECT * FROM orders WHERE userID = ?`;
       const [data] = await pool.query(query, [userID]);
@@ -53,6 +63,21 @@ const deleteUserDb = async (userID) => {
     }
   };
   
+  const insertOrderDb = async (userID, prodID, date) => {
+    try {
+      if (!date) {
+        throw new Error('Date is required');
+      }
+  
+      const query = `INSERT INTO orders (userID, prodID, date) VALUES (?, ?, ?)`;
+      const formattedDate = date.split('T')[0]; // "YYYY-MM-DD"
+      const result = await pool.query(query, [userID, prodID, formattedDate]);
+      return { message: 'Order inserted successfully', orderID: result.insertId };
+    } catch (error) {
+      console.error('Error inserting order:', error);
+      throw error;
+    }
+  };
 
   const getOrderDb = async (userID, orderID) => {
     try {
@@ -71,21 +96,6 @@ const deleteUserDb = async (userID) => {
   };
 
 
-  const insertOrderDb = async (userID, prodID, date) => {
-    try {
-      if (!date) {
-        throw new Error('Date is required');
-      }
-  
-      const query = `INSERT INTO orders (userID, prodID, date) VALUES (?, ?, ?)`;
-      const formattedDate = date.split('T')[0]; // Format the date string to "YYYY-MM-DD"
-      const result = await pool.query(query, [userID, prodID, formattedDate]);
-      return { message: 'Order inserted successfully', orderID: result.insertId };
-    } catch (error) {
-      console.error('Error inserting order:', error);
-      throw error;
-    }
-  };
 
   const updateOrderDb = async (userID, orderID, updatedOrderData) => {
     try {
@@ -129,4 +139,4 @@ const deleteUserDb = async (userID) => {
     }
   };
 
-  export {getUsersDb, getUserDb, insertUserDb, deleteUserDb, updateUserDb, insertOrderDb, getOrderDb, updateOrderDb, deleteUserOrdersDb, deleteOrderDb,getAllOrdersDb }
+  export {getUsersDb, getUserDb, insertUserDb, deleteUserDb, updateUserDb, insertOrderDb, getOrderDb, updateOrderDb, deleteUserOrdersDb, deleteOrderDb,getAllOrdersDb, getAllOrderDb }
