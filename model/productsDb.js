@@ -7,8 +7,11 @@ const getProductsDb = async () => {
 
 const getProductDb = async (prodID) => {
     let [[data]] = await pool.query('SELECT * FROM products WHERE prodID = ?', [prodID]);
+    if (!data) {
+      return null; // or throw an error
+    }
     return data;
-};
+  };
 
 const insertProductDb = async (prodName, quantity, amount, Category, prodUrl, prodDescription) => {
     await pool.query(`
@@ -30,34 +33,33 @@ const updateProductDb = async (prodID, prodName, quantity, amount, Category, pro
     `, [prodName, quantity, amount, Category, prodUrl, prodDescription, prodID]);
 };
 
-const bookProductDb = async (userID, prodID) => {
-    try {
-      // Get the product's current quantity
-      let [[product]] = await pool.query('SELECT quantity FROM products WHERE prodID = ?', [prodID]);
+// const bookProductDb = async (userID, prodID) => {
+//     try {
+//       let [[product]] = await pool.query('SELECT quantity FROM products WHERE prodID = ?', [prodID]);
   
-      if (product.quantity <= 0) {
-        throw new Error('Product is out of stock');
-      }
+//       if (product.quantity <= 0) {
+//         throw new Error('Product is out of stock');
+//       }
+//       let [[order]] = await pool.query(`
+//         INSERT INTO orders (userID, prodID) VALUES (?,?)
+//         RETURNING orderID, userID, prodID, orderDate
+//       `, [userID, prodID]);
+//       await pool.query(`
+//         UPDATE products
+//         SET quantity = quantity - 1
+//         WHERE prodID = ?
+//       `, [prodID]);
   
-      // Insert a new record into the orders table
-      await pool.query(`
-        INSERT INTO orders (userID, prodID) VALUES (?,?)
-      `, [userID, prodID]);
-  
-      // Update the product's quantity
-      await pool.query(`
-        UPDATE products
-        SET quantity = quantity - 1
-        WHERE prodID = ?
-      `, [prodID]);
-  
-      return true;
-    } catch (error) {
-      console.error(error);
-      return false;
-    }
-  };
+//       console.log('Order created successfully:', order);
+//       return order;
+//     } catch (error) {
+//       console.error('Error in bookProductDb:', error);
+//       console.error('Error message:', error.message);
+//       console.error('Error stack:', error.stack);
+//       return false;
+//     }
+//   };
 
 
 
-export {getProductsDb, getProductDb, insertProductDb, deleteProductDb, updateProductDb, bookProductDb};
+export {getProductsDb, getProductDb, insertProductDb, deleteProductDb, updateProductDb, };

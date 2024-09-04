@@ -1,20 +1,130 @@
 import express from 'express'
-import {getUsers, getUser, insertUser, deleteUser, updateUser,loginUser} from '../contoller/usersController.js'
+import {getUsers, getUser, insertUser, deleteUser, updateUser,loginUser, insertOrder,} from '../contoller/usersController.js'
 import { checkUser } from '../middleware/authenticate.js'
+import { getOrderDb, updateOrderDb, deleteUserOrdersDb, deleteOrderDb , insertOrderDb} from '../model/usersDb.js'
+
 
 const router = express.Router()
 
 router.post('/login',checkUser, loginUser) //(req,res)=>{
 //     res.json({message:"You have signed in!!", token:req.body.token})
 // })
+// router.post('/:userID/order', checkUser, async (req, res) => {
+//     const { userID } = req.params
+//     const { prodID } = req.body
+  
+//     try {
+//       const order = await bookProductDb(userID, prodID)
+//       if (!order) {
+//         res.status(500).json({ message: 'Failed to create order' })
+//       } else {
+//         res.json({ message: 'Order created successfully', order })
+//       }
+//     } catch (error) {
+//       res.status(500).json({ message: 'Error creating order', error })
+//     }
+//   })
+
+// orders
+
+router.post('/:id/order', async (req, res) => {
+    console.log('req.params:', req.params);
+    console.log('req.body:', req.body);
+    try {
+      const userID = req.params.id; // Access the userID from the URL parameter
+      const { prodID } = req.body;
+      const date = req.body.date; // Assuming the date is sent in the request body
+      const order = await insertOrderDb(userID, prodID, date);
+      if (!order) {
+        res.status(500).json({ message: 'Failed to create order' });
+      } else {
+        res.json({ message: 'Order created successfully', order });
+      }
+    } catch (error) {
+      console.error('Error creating order:', error);
+      res.status(500).json({ message: 'Error creating order', error });
+    }
+  });
+
+  router.route('/:userID/order/:orderID')
+  .get(async (req, res) => {
+    try {
+      const userID = req.params.userID;
+      const orderID = req.params.orderID;
+      const order = await getOrderDb(userID, orderID);
+      if (!order) {
+        res.status(404).json({ message: `Order with ID ${orderID} not found` });
+      } else {
+        res.json(order);
+      }
+    } catch (error) {
+      console.error('Error getting order:', error);
+      res.status(500).json({ message: 'Error getting order', error });
+    }
+  });
+
+  router.route('/:userID/order/:orderID')
+  .patch(async (req, res) => {
+    try {
+      const userID = req.params.userID;
+      const orderID = req.params.orderID;
+      const updatedOrder = await updateOrderDb(userID, orderID, req.body);
+      if (!updatedOrder) {
+        res.status(404).json({ message: `Order with ID ${orderID} not found` });
+      } else {
+        res.json(updatedOrder);
+      }
+    } catch (error) {
+      console.error('Error updating order:', error);
+      res.status(500).json({ message: 'Error updating order', error });
+    }
+  });
+
+  router.route('/:userID/order')
+.delete(async (req, res) => {
+  try {
+    const userID = req.params.userID;
+    const deletedOrders = await deleteUserOrdersDb(userID);
+    if (!deletedOrders) {
+      res.status(404).json({ message: `No orders found for user with ID ${userID}` });
+    } else {
+      res.json({ message: `Orders deleted successfully for user with ID ${userID}` });
+    }
+  } catch (error) {
+    console.error('Error deleting orders:', error);
+    res.status(500).json({ message: 'Error deleting orders', error });
+  }
+});
+
+router.route('/:userID/order/:orderID')
+.delete(async (req, res) => {
+  try {
+    const userID = req.params.userID;
+    const orderID = req.params.orderID;
+    const deletedOrder = await deleteOrderDb(userID, orderID);
+    if (!deletedOrder) {
+      res.status(404).json({ message: `Order with ID ${orderID} not found` });
+    } else {
+      res.json({ message: `Order with ID ${orderID} deleted successfully` });
+    }
+  } catch (error) {
+    console.error('Error deleting order:', error);
+    res.status(500).json({ message: 'Error deleting order', error });
+  }
+});
+
+//   users
 
 router.
     route('/')
         .get(getUsers)
         .post(insertUser)
-router.
-    route('/:id')
-        .get(getUser)
+// router.
+router.route('/:id')
+.get(async (req, res) => {
+  console.log('req.params:', req.params);
+  res.json(await getUser(req, res));
+})
         .delete(deleteUser)
         .patch(updateUser)
         

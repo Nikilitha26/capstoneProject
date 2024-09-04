@@ -32,29 +32,31 @@ const checkUser = async (req, res) => {
 };
 
 const verifyAToken = (req, res, next) => {
-    try {
-      let token;
-      if (req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
-        token = req.headers.authorization.split(' ')[1];
-      } else if (req.headers.cookie) {
-        token = req.headers.cookie.match(/token=([^;]*)/)[1];
-      }
-      if (!token) {
-        res.json({ message: 'No token provided' });
+  try {
+    let token;
+    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
+      token = req.headers.authorization.split(' ')[1];
+    } else if (req.headers.cookie) {
+      token = req.headers.cookie.match(/token=([^;]*)/)[1];
+    }
+    if (!token) {
+      res.json({ message: 'No token provided' });
+      return;
+    }
+    jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
+      if (err) {
+        res.json({ message: 'Token expired' });
         return;
       }
-      jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
-        if (err) {
-          res.json({ message: 'Token expired' });
-          return;
-        }
-        req.body.user = decoded.emailAdd;
-        next();
-      });
-    } catch (err) {
-      console.error(err);
-      res.status(500).send('Error verifying token');
-    }
-  };
+      req.body.user = decoded.emailAdd;
+      // Update the Vuex store with the token and the user's information
+      req.app.locals.store.dispatch('loginUser', { token, userId: decoded.userId });
+      next();
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error verifying token');
+  }
+};
     
     export {checkUser, verifyAToken}
