@@ -1,29 +1,15 @@
 import express from 'express'
 import {getUsers, getUser, insertUser, deleteUser, updateUser,loginUser, insertOrder,} from '../contoller/usersController.js'
-import { checkUser } from '../middleware/authenticate.js'
+import { checkUser, } from '../middleware/authenticate.js'
 import { getOrderDb, updateOrderDb, deleteUserOrdersDb, deleteOrderDb , insertOrderDb} from '../model/usersDb.js'
 
 
 const router = express.Router()
 
-router.post('/login',checkUser, loginUser) //(req,res)=>{
+router.post('/login', checkUser, loginUser) //(req,res)=>{
 //     res.json({message:"You have signed in!!", token:req.body.token})
 // })
-// router.post('/:userID/order', checkUser, async (req, res) => {
-//     const { userID } = req.params
-//     const { prodID } = req.body
-  
-//     try {
-//       const order = await bookProductDb(userID, prodID)
-//       if (!order) {
-//         res.status(500).json({ message: 'Failed to create order' })
-//       } else {
-//         res.json({ message: 'Order created successfully', order })
-//       }
-//     } catch (error) {
-//       res.status(500).json({ message: 'Error creating order', error })
-//     }
-//   })
+
 
 // orders
 

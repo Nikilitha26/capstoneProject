@@ -6,11 +6,17 @@ const getUsersDb = async ()=>{
     return data
 }
 
-const getUserDb = async (id) => {
-  const query = `SELECT * FROM users WHERE userID = ?`;
-  const result = await pool.query(query, [id]);
+const getUserDb = async (emailAdd) => {
+  const query = `SELECT * FROM users WHERE emailAdd = ?`;
+  const result = await pool.query(query, [emailAdd]);
   return result[0];
 };
+
+// const getUserByEmailDb = async (emailAdd) => {
+//   const query = `SELECT * FROM users WHERE emailAdd = ?`;
+//   const result = await pool.query(query, [emailAdd]);
+//   return result[0];
+// };
 
 
 const insertUserDb = async (firstName, lastName, userAge, Gender, userRole, emailAdd, userProfile, hashedPass) => {
@@ -109,4 +115,4 @@ const deleteUserDb = async (userID) => {
     }
   };
 
-  export {getUsersDb, getUserDb, insertUserDb, deleteUserDb, updateUserDb, insertOrderDb, getOrderDb, updateOrderDb, deleteUserOrdersDb, deleteOrderDb }
+  export {getUsersDb, getUserDb, insertUserDb, deleteUserDb, updateUserDb, insertOrderDb, getOrderDb, updateOrderDb, deleteUserOrdersDb, deleteOrderDb,}
