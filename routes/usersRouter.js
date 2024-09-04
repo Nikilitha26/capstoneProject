@@ -6,7 +6,7 @@ import { getOrderDb, updateOrderDb, deleteUserOrdersDb, deleteOrderDb , insertOr
 
 const router = express.Router()
 
-router.post('/login',verifyAToken, checkUser, loginUser) //(req,res)=>{
+router.post('/login', checkUser, loginUser) //(req,res)=>{
 //     res.json({message:"You have signed in!!", token:req.body.token})
 // })
 
