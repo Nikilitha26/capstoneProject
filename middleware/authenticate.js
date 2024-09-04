@@ -26,7 +26,7 @@ const checkUser = async (req, res) => {
   if (result) {
 
     let token = jwt.sign({ emailAdd: emailAdd, userId: user.userId }, process.env.SECRET_KEY, { expiresIn: '1h' });
-    res.json({ token: token, message: 'You have signed in!!', user: user });
+    res.json({ token: token, message: 'You have signed in!!'});
   } else {
     res.status(401).json({ error: 'Password incorrect' });
   }
