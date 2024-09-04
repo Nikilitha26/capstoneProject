@@ -40,14 +40,28 @@ const deleteUserDb = async (userID) => {
     await pool.query('UPDATE users SET firstName = ?, lastName = ?, userAge = ?, Gender = ?, userRole = ?, emailAdd = ?, userProfile = ?, userPass = ? WHERE userID = ?',
         [firstName, lastName, userAge, Gender, userRole, emailAdd, userProfile, hashedPass, userID])
   }
+// orders
 
+  const getAllOrdersDb = async (userID) => {
+    try {
+      const query = `SELECT * FROM orders WHERE userID = ?`;
+      const [data] = await pool.query(query, [userID]);
+      return data;
+    } catch (error) {
+      console.error('Error getting orders:', error);
+      throw error;
+    }
+  };
+  
 
   const getOrderDb = async (userID, orderID) => {
     try {
       const query = `SELECT * FROM orders WHERE userID = ? AND orderID = ?`;
       const [data] = await pool.query(query, [userID, orderID]);
-      if (!data[0]) {
-        throw new Error(`Order with ID ${orderID} not found`);
+      console.log('Query results:', data);
+      if (data.length === 0) {
+        console.log(`Order with ID ${orderID} not found`);
+        return null;
       }
       return data[0];
     } catch (error) {
@@ -115,4 +129,4 @@ const deleteUserDb = async (userID) => {
     }
   };
 
-  export {getUsersDb, getUserDb, insertUserDb, deleteUserDb, updateUserDb, insertOrderDb, getOrderDb, updateOrderDb, deleteUserOrdersDb, deleteOrderDb,}
+  export {getUsersDb, getUserDb, insertUserDb, deleteUserDb, updateUserDb, insertOrderDb, getOrderDb, updateOrderDb, deleteUserOrdersDb, deleteOrderDb,getAllOrdersDb }
