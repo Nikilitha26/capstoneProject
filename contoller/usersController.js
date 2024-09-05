@@ -1,7 +1,8 @@
-import {getUsersDb, getUserDb, insertUserDb, deleteUserDb, updateUserDb,insertOrderDb,} from '../model/usersDb.js'
+import {getUsersDb, getUserDb, insertUserDb, deleteUserDb, updateUserDb,insertOrderDb, deleteUserOrdersDb} from '../model/usersDb.js'
 import { checkUser } from '../middleware/authenticate.js';
 import { hash, compare} from 'bcrypt';
 import bcrypt from 'bcrypt';
+import { pool } from "../config/config.js";
 
 const getUsers = async(req,res)=>{
     res.json(await getUsersDb());
@@ -42,15 +43,19 @@ const insertUser = async (req, res) => {
   }
 }
 
-  const deleteUser = async (req, res) => {
-    try {
-        await deleteUserDb(req.params.id)
-        res.send('User has been deleted')
-    } catch (err) {
-        console.error(err)
-        res.status(500).send('Error deleting user')
-    }
-}
+const deleteUser = async (req, res) => {
+  try {
+    const userID = req.params.id;
+    // Delete the user's orders first
+    await deleteUserOrdersDb(userID);
+    // Then delete the user
+    await pool.query('DELETE FROM users WHERE userID = ?', [userID]);
+    res.json({ message: `User with ID ${userID} deleted successfully` });
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    res.status(500).json({ message: 'Error deleting user', error });
+  }
+};
 
 const updateUser = async (req, res) => {
   let { userID, firstName, lastName, userAge, Gender, userRole, emailAdd, userPass, userProfile } = req.body;

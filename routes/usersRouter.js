@@ -134,7 +134,7 @@ router.
     route('/')
         .get(getUsers)
         .post(insertUser)
-// router.
+        
 router.route('/:id')
   .get(async (req, res) => {
     try {

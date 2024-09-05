@@ -34,8 +34,16 @@ const insertUserDb = async (firstName, lastName, userAge, Gender, userRole, emai
 }
 
 const deleteUserDb = async (userID) => {
-    const result = await pool.query('DELETE FROM users WHERE userID = ?', [userID])
+  try {
+    // Delete the user's orders first
+    await deleteUserOrdersDb(userID);
+    // Then delete the user
+    await pool.query('DELETE FROM users WHERE userID = ?', [userID]);
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    throw error;
   }
+};
 
   const updateUserDb = async (userID, firstName, lastName, userAge, Gender, userRole, emailAdd, userPass, userProfile)=>{
     const hashedPass = await bcrypt.hash(userPass, 10);
