@@ -12,8 +12,17 @@ const getUser = async (req, res) => {
   if (!id) {
     res.status(400).json({ message: 'User ID is required' });
   } else {
-    const user = await getUserDb(id);
-    res.json(user);
+    try {
+      const user = await getUserDb(id);
+      if (!user) {
+        res.status(404).json({ message: `User with ID ${id} not found` });
+      } else {
+        res.json(user);
+      }
+    } catch (error) {
+      console.error('Error getting user:', error);
+      res.status(500).json({ message: 'Error getting user', error });
+    }
   }
 };
 

@@ -12,11 +12,13 @@ const getUserDb = async (emailAdd) => {
   return result[0];
 };
 
-// const getUserByEmailDb = async (emailAdd) => {
-//   const query = `SELECT * FROM users WHERE emailAdd = ?`;
-//   const result = await pool.query(query, [emailAdd]);
-//   return result[0];
-// };
+const getUserByIdDb = async (userID) => {
+  const userIdAsInt = parseInt(userID, 10); // Convert userID to an integer
+  console.log('userIdAsInt:', userIdAsInt); // Log the converted value
+  const query = `SELECT * FROM users WHERE userID = ?`;
+  const result = await pool.query(query, [userIdAsInt]);
+  return result[0];
+};
 
 
 const insertUserDb = async (firstName, lastName, userAge, Gender, userRole, emailAdd, userProfile, hashedPass) => {
@@ -40,6 +42,7 @@ const deleteUserDb = async (userID) => {
     await pool.query('UPDATE users SET firstName = ?, lastName = ?, userAge = ?, Gender = ?, userRole = ?, emailAdd = ?, userProfile = ?, userPass = ? WHERE userID = ?',
         [firstName, lastName, userAge, Gender, userRole, emailAdd, userProfile, hashedPass, userID])
   }
+  
 // orders
 const getAllOrdersDb = async () => {
   try {
@@ -139,4 +142,4 @@ const getAllOrdersDb = async () => {
     }
   };
 
-  export {getUsersDb, getUserDb, insertUserDb, deleteUserDb, updateUserDb, insertOrderDb, getOrderDb, updateOrderDb, deleteUserOrdersDb, deleteOrderDb,getAllOrdersDb, getAllOrderDb }
+  export {getUsersDb, getUserDb, insertUserDb, deleteUserDb, updateUserDb, insertOrderDb, getOrderDb, updateOrderDb, deleteUserOrdersDb, deleteOrderDb,getAllOrdersDb, getAllOrderDb,  getUserByIdDb }

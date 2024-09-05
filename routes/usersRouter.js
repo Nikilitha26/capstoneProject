@@ -1,7 +1,7 @@
 import express from 'express'
 import {getUsers, getUser, insertUser, deleteUser, updateUser,loginUser, insertOrder,} from '../contoller/usersController.js'
 import { checkUser, verifyAToken, } from '../middleware/authenticate.js'
-import { getOrderDb, updateOrderDb, deleteUserOrdersDb, deleteOrderDb , insertOrderDb, getAllOrdersDb, getAllOrderDb} from '../model/usersDb.js'
+import { getOrderDb, updateOrderDb, deleteUserOrdersDb, deleteOrderDb , insertOrderDb, getAllOrdersDb, getAllOrderDb, getUserByIdDb} from '../model/usersDb.js'
 
 
 const router = express.Router()
@@ -136,10 +136,20 @@ router.
         .post(insertUser)
 // router.
 router.route('/:id')
-.get(async (req, res) => {
-  console.log('req.params:', req.params);
-  res.json(await getUser(req, res));
-})
+  .get(async (req, res) => {
+    try {
+      const id = req.params.id;
+      const user = await getUserByIdDb(id);
+      if (!user) {
+        res.status(404).json({ message: `User with ID ${id} not found` });
+      } else {
+        res.json(user);
+      }
+    } catch (error) {
+      console.error('Error getting user:', error);
+      res.status(500).json({ message: 'Error getting user', error });
+    }
+  })
         .delete(deleteUser)
         .patch(updateUser)
         
