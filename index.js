@@ -11,10 +11,10 @@ let PORT = process.env.PORT || 5005;
 const app = express();
 
 app.use(cors({
-  origin: ['http://localhost:8080', 'https://capstoneproject-1-9k8p.onrender.com'],
-  credentials: true,
-  headers: ['Content-Type', 'Authorization', 'Access-Control-Allow-Origin']
-}));
+    origin: ['http://localhost:8080', 'https://capstoneproject-1-9k8p.onrender.com'],
+    credentials: true,
+    headers: ['Content-Type', 'Authorization']
+  }));
 
 app.use(express.json());
 app.use(express.static('public'));

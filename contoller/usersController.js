@@ -1,4 +1,4 @@
-import {getUsersDb, getUserDb, insertUserDb, deleteUserDb, updateUserDb,insertOrderDb, deleteUserOrdersDb} from '../model/usersDb.js'
+import {getUsersDb, getUserDb,getUserByIdDb, insertUserDb, deleteUserDb, updateUserDb,insertOrderDb, deleteUserOrdersDb} from '../model/usersDb.js'
 import { checkUser } from '../middleware/authenticate.js';
 import { hash, compare} from 'bcrypt';
 import bcrypt from 'bcrypt';
@@ -56,23 +56,40 @@ const deleteUser = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
-  let { userID, firstName, lastName, userAge, Gender, userRole, emailAdd, userPass, userProfile } = req.body;
-  let user = await getUserDb(req.params.userID);
-  userID ? userID = userID : userID = user.userID;
-  firstName ? firstName = firstName : firstName = user.firstName;
-  lastName ? lastName = lastName : lastName = user.lastName;
-  userAge ? userAge = userAge : userAge = user.userAge;
-  Gender ? Gender = Gender : Gender = user.Gender;
-  userRole ? userRole = userRole : userRole = user.userRole;
-  emailAdd ? emailAdd = emailAdd : emailAdd = user.emailAdd;
+  const userID = req.params.id;
+  if (!userID) {
+    res.status(400).json({ message: 'User ID is required' });
+    return;
+  }
+
+  const user = await getUserByIdDb(userID);
+  if (!user) {
+    res.status(404).json({ message: `User with ID ${userID} not found` });
+    return;
+  }
+
+  let { firstName, lastName, userAge, Gender, userRole, emailAdd, userPass, userProfile } = req.body;
+  firstName = firstName || user.firstName;
+  lastName = lastName || user.lastName;
+  userAge = userAge || user.userAge;
+  Gender = Gender || user.Gender;
+  userRole = userRole || user.userRole;
+  emailAdd = emailAdd || user.emailAdd;
   if (userPass) {
-    userPass = await hash(userPass, 10);
+    userPass = await bcrypt.hash(userPass, 10);
   } else {
     userPass = user.userPass;
   }
-  userProfile ? userProfile = userProfile : userProfile = user.userProfile;
-  await updateUserDb(userID, firstName, lastName, userAge, Gender, userRole, emailAdd, userPass, userProfile);
-  res.send('Update was successful');
+  userProfile = userProfile || user.userProfile;
+
+  console.log('Updating user:', userID, firstName, lastName, userAge, Gender, userRole, emailAdd, userPass, userProfile);
+  try {
+    await updateUserDb(userID, firstName, lastName, userAge, Gender, userRole, emailAdd, userPass, userProfile);
+    res.json({ message: `User with ID ${userID} updated successfully` });
+  } catch (error) {
+    console.error('Error updating user:', error);
+    res.status(500).json({ message: 'Error updating user', error });
+  }
 };
 
 const loginUser = (req, res, token) => {

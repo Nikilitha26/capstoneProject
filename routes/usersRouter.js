@@ -1,7 +1,7 @@
 import express from 'express'
 import {getUsers, getUser, insertUser, deleteUser, updateUser,loginUser, insertOrder,} from '../contoller/usersController.js'
 import { checkUser, verifyAToken, } from '../middleware/authenticate.js'
-import { getOrderDb, updateOrderDb, deleteUserOrdersDb, deleteOrderDb , insertOrderDb, getAllOrdersDb, getAllOrderDb, getUserByIdDb} from '../model/usersDb.js'
+import { updateUserDb, getOrderDb, updateOrderDb, deleteUserOrdersDb, deleteOrderDb , insertOrderDb, getAllOrdersDb, getAllOrderDb, getUserByIdDb} from '../model/usersDb.js'
 
 
 const router = express.Router()
@@ -150,6 +150,23 @@ router.route('/:id')
     }
   })
         .delete(deleteUser)
-        .patch(updateUser)
+
+  .patch(async (req, res) => {
+    try {
+      const id = req.params.id;
+      const user = await getUserByIdDb(id);
+      if (!user) {
+        res.status(404).json({ message: `User with ID ${id} not found` });
+      } else {
+        // Update the user data here
+        const { firstName, lastName, userAge, Gender, userRole, emailAdd, userPass, userProfile } = req.body;
+        await updateUserDb(id, firstName, lastName, userAge, Gender, userRole, emailAdd, userPass, userProfile);
+        res.json({ message: `User with ID ${id} updated successfully` });
+      }
+    } catch (error) {
+      console.error('Error updating user:', error);
+      res.status(500).json({ message: 'Error updating user', error });
+    }
+  });
         
 export default router

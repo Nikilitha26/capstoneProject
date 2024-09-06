@@ -43,11 +43,18 @@ const deleteUserDb = async (userID) => {
   }
 };
 
-  const updateUserDb = async (userID, firstName, lastName, userAge, Gender, userRole, emailAdd, userPass, userProfile)=>{
-    const hashedPass = await bcrypt.hash(userPass, 10);
-    await pool.query('UPDATE users SET firstName = ?, lastName = ?, userAge = ?, Gender = ?, userRole = ?, emailAdd = ?, userProfile = ?, userPass = ? WHERE userID = ?',
-        [firstName, lastName, userAge, Gender, userRole, emailAdd, userProfile, hashedPass, userID])
+const updateUserDb = async (userID, firstName, lastName, userAge, Gender, userRole, emailAdd, userPass, userProfile) => {
+  const user = await getUserByIdDb(userID);
+  if (!user) {
+    throw new Error(`User with ID ${userID} not found`);
   }
+
+  const hashedPass = await bcrypt.hash(userPass, 10);
+  await pool.query('UPDATE users SET firstName = ?, lastName = ?, userAge = ?, Gender = ?, userRole = ?, emailAdd = ?, userProfile = ?, userPass = ? WHERE userID = ?',
+    [firstName, lastName, userAge, Gender, userRole, emailAdd, userProfile, hashedPass, userID]);
+
+  return { message: `User with ID ${userID} updated successfully` };
+}
   
 // orders
 const getAllOrdersDb = async () => {
