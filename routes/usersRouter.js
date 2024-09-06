@@ -6,14 +6,11 @@ import { getOrderDb, updateOrderDb, deleteUserOrdersDb, deleteOrderDb , insertOr
 
 const router = express.Router()
 
-router.post('/login', checkUser, loginUser) //(req,res)=>{
-//     res.json({message:"You have signed in!!", token:req.body.token})
-// })
-
+router.post('/login', checkUser, loginUser) 
 
 // orders
 router.route('/orders')
-  .get(async (req, res) => {
+  .get(verifyAToken, async (req, res) => {
     try {
       const orders = await getAllOrdersDb();
       if (!orders) {
@@ -28,7 +25,7 @@ router.route('/orders')
   });
 
 router.route('/:userID/order')
-.get(async (req, res) => {
+.get(verifyAToken, async (req, res) => {
     try {
         const userID = req.params.userID;
         const orders = await getAllOrderDb(userID);
@@ -44,40 +41,42 @@ router.route('/:userID/order')
 });
 
 router.route('/:userID/order/:orderID')
-.get(async (req, res) => {
+  .get(verifyAToken, async (req, res) => {
     try {
-        const userID = req.params.userID;
-        const orderID = req.params.orderID;
-        const order = await getOrderDb(userID, orderID);
-        if (!order) {
-            res.status(404).json({ message: `Order with ID ${orderID} not found` });
-        } else {
-            res.json(order);
-        }
+      const userID = req.params.userID;
+      const orderID = req.params.orderID;
+      const order = await getOrderDb(userID, orderID);
+      if (!order) {
+        res.status(404).json({ message: `Order with ID ${orderID} not found` });
+      } else {
+        res.json(order);
+      }
     } catch (error) {
-        console.error('Error getting order:', error);
-        res.status(500).json({ message: 'Error getting order', error });
+      console.error('Error getting order:', error);
+      res.status(500).json({ message: 'Error getting order', error });
     }
-});
+  });
 
-router.post('/:id/order', async (req, res) => {
-    console.log('req.params:', req.params);
-    console.log('req.body:', req.body);
-    try {
-      const userID = req.params.id; 
-      const { prodID } = req.body;
-      const date = req.body.date;
+router.post('/:id/order', verifyAToken, async (req, res) => {
+  try {
+    const userID = req.params.id;
+    const { prodID, date } = req.body;
+    if (!prodID || !date) {
+      res.status(400).json({ message: 'Missing required fields' });
+    } else {
       const order = await insertOrderDb(userID, prodID, date);
       if (!order) {
         res.status(500).json({ message: 'Failed to create order' });
       } else {
         res.json({ message: 'Order created successfully', order });
       }
-    } catch (error) {
-      console.error('Error creating order:', error);
-      res.status(500).json({ message: 'Error creating order', error });
     }
-  });
+  } catch (error) {
+    console.error('Error creating order:', error);
+    res.status(500).json({ message: 'Error creating order', error });
+  }
+});
+
 router.route('/:userID/order/:orderID')
   .patch(async (req, res) => {
     try {
@@ -132,7 +131,7 @@ router.route('/:userID/order/:orderID')
 
 router.
     route('/')
-        .get(getUsers)
+    .get(verifyAToken, getUsers)
         .post(insertUser)
         
 router.route('/:id')

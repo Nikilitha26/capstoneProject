@@ -25,7 +25,7 @@ const checkUser = async (req, res) => {
 
   if (result) {
 
-    let token = jwt.sign({ emailAdd: emailAdd, userId: user.userId }, process.env.SECRET_KEY, { expiresIn: '1h' });
+    let token = jwt.sign({ emailAdd: emailAdd, userId: user.userId, role: user.role }, process.env.SECRET_KEY, { expiresIn: '1h' });
     res.json({ token: token, message: 'You have signed in!!', user});
   } else {
     res.status(401).json({ error: 'Password incorrect' });
@@ -51,13 +51,22 @@ const verifyAToken = (req, res, next) => {
       }
       req.body.user = decoded.emailAdd;
       req.body.userId = decoded.userId;
+      req.body.role = decoded.role; 
       console.log(decoded);
-      next();
+      next(null, decoded.role); // pass the user's role to the next function
     });
   } catch (err) {
     console.error(err);
     res.status(500).send('Error verifying token');
   }
 };
+
+const isAdmin = (req, res, next) => {
+  if (req.body.role !== 'admin') {
+    res.status(403).json({ error: 'Only admins can access this page' });
+    return;
+  }
+  next();
+};
     
-    export {checkUser, verifyAToken}
+    export {checkUser, verifyAToken, isAdmin}

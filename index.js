@@ -3,6 +3,7 @@ import express from 'express'
 import {config} from 'dotenv'
 import productsRouter from './routes/productsRouter.js'
 import usersRouter from './routes/usersRouter.js'
+import { isAdmin } from './middleware/authenticate.js'
 
 config()
 
@@ -24,6 +25,9 @@ app.use((req, res, next) => {
   })
 app.use('/users', usersRouter)
 app.use('/products', productsRouter) 
+app.get('/admin', isAdmin, (req, res) => {
+    // Admin page logic here
+  });
 app.listen(PORT, ()=>{
     console.log('http://localhost:'+PORT);
 })

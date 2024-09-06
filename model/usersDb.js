@@ -13,8 +13,8 @@ const getUserDb = async (emailAdd) => {
 };
 
 const getUserByIdDb = async (userID) => {
-  const userIdAsInt = parseInt(userID, 10); // Convert userID to an integer
-  console.log('userIdAsInt:', userIdAsInt); // Log the converted value
+  const userIdAsInt = parseInt(userID, 10); 
+  console.log('userIdAsInt:', userIdAsInt);
   const query = `SELECT * FROM users WHERE userID = ?`;
   const result = await pool.query(query, [userIdAsInt]);
   return result[0];
@@ -35,9 +35,7 @@ const insertUserDb = async (firstName, lastName, userAge, Gender, userRole, emai
 
 const deleteUserDb = async (userID) => {
   try {
-    // Delete the user's orders first
     await deleteUserOrdersDb(userID);
-    // Then delete the user
     await pool.query('DELETE FROM users WHERE userID = ?', [userID]);
   } catch (error) {
     console.error('Error deleting user:', error);

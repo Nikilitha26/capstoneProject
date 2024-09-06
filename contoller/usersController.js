@@ -46,9 +46,7 @@ const insertUser = async (req, res) => {
 const deleteUser = async (req, res) => {
   try {
     const userID = req.params.id;
-    // Delete the user's orders first
     await deleteUserOrdersDb(userID);
-    // Then delete the user
     await pool.query('DELETE FROM users WHERE userID = ?', [userID]);
     res.json({ message: `User with ID ${userID} deleted successfully` });
   } catch (error) {
