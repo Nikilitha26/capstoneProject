@@ -10,7 +10,7 @@ router.post('/login', checkUser, loginUser)
 
 // orders
 router.route('/orders')
-  .get(verifyAToken, async (req, res) => {
+  .get( async (req, res) => {
     try {
       const orders = await getAllOrdersDb();
       if (!orders) {
@@ -25,7 +25,7 @@ router.route('/orders')
   });
 
 router.route('/:userID/order')
-.get(verifyAToken, async (req, res) => {
+.get( async (req, res) => {
     try {
         const userID = req.params.userID;
         const orders = await getAllOrderDb(userID);
@@ -41,7 +41,7 @@ router.route('/:userID/order')
 });
 
 router.route('/:userID/order/:orderID')
-  .get(verifyAToken, async (req, res) => {
+  .get( async (req, res) => {
     try {
       const userID = req.params.userID;
       const orderID = req.params.orderID;
@@ -57,7 +57,7 @@ router.route('/:userID/order/:orderID')
     }
   });
 
-router.post('/:id/order', verifyAToken, async (req, res) => {
+router.post('/:id/order', async (req, res) => {
   try {
     const userID = req.params.id;
     const { prodID, date } = req.body;
