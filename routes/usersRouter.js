@@ -131,7 +131,7 @@ router.route('/:userID/order/:orderID')
 
 router.
     route('/')
-    .get(verifyAToken, getUsers)
+    .get( getUsers)
         .post(insertUser)
         
 router.route('/:id')
