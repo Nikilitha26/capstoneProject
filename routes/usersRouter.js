@@ -1,7 +1,7 @@
 import express from 'express'
 import {getUsers, getUser, insertUser, deleteUser, updateUser,loginUser, insertOrder,} from '../contoller/usersController.js'
 import { checkUser, verifyAToken, } from '../middleware/authenticate.js'
-import { updateUserDb, getOrderDb, updateOrderDb, deleteUserOrdersDb, deleteOrderDb , insertOrderDb, getAllOrdersDb, getAllOrderDb, getUserByIdDb} from '../model/usersDb.js'
+import { updateUserDb, getOrderDb, updateOrderDb, deleteUserOrdersDb, deleteOrderDb , insertOrderDb, getAllOrdersDb, getAllOrderDb, getUserByIdDb, deleteAllOrdersDb } from '../model/usersDb.js'
 
 
 const router = express.Router()
@@ -21,6 +21,21 @@ router.route('/orders')
     } catch (error) {
       console.error('Error getting orders:', error);
       res.status(500).json({ message: 'Error getting orders', error });
+    }
+  });
+
+  router.route('/orders')
+  .delete(async (req, res) => {
+    try {
+      const deletedOrders = await deleteAllOrdersDb();
+      if (!deletedOrders) {
+        res.status(404).json({ message: 'No orders found to delete' });
+      } else {
+        res.json({ message: 'Orders deleted successfully' });
+      }
+    } catch (error) {
+      console.error('Error deleting orders:', error);
+      res.status(500).json({ message: 'Error deleting orders', error });
     }
   });
 
@@ -78,19 +93,22 @@ router.post('/:id/order', async (req, res) => {
 });
 
 router.route('/:userID/order/:orderID')
-  .patch(async (req, res) => {
+  .delete(async (req, res) => {
     try {
       const userID = req.params.userID;
       const orderID = req.params.orderID;
-      const updatedOrder = await updateOrderDb(userID, orderID, req.body);
-      if (!updatedOrder) {
-        res.status(404).json({ message: `Order with ID ${orderID} not found` });
+      console.log(`Attempting to delete order with ID ${orderID} for user with ID ${userID}`);
+      const deletedOrder = await deleteOrderDb(userID, orderID);
+      console.log(`Deleted order: ${deletedOrder}`);
+      if (!deletedOrder) {
+        console.log(`Order with ID ${orderID} not found for user with ID ${userID}`);
+        res.status(404).json({ message: `Order with ID ${orderID} not found for user with ID ${userID}` });
       } else {
-        res.json(updatedOrder);
+        res.json({ message: `Order with ID ${orderID} deleted successfully for user with ID ${userID}` });
       }
     } catch (error) {
-      console.error('Error updating order:', error);
-      res.status(500).json({ message: 'Error updating order', error });
+      console.error('Error deleting order:', error);
+      res.status(500).json({ message: 'Error deleting order', error });
     }
   });
 
