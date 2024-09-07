@@ -8,6 +8,22 @@ const router = express.Router()
 
 router.post('/login', checkUser, loginUser) 
 
+router.route('/verifyAToken')
+  .post(verifyAToken, async (req, res) => {
+    try {
+      const token = req.body.token;
+      const decodedToken = await verifyAToken(token);
+      if (!decodedToken) {
+        res.status(401).json({ message: 'Invalid token' });
+      } else {
+        res.json({ message: 'Token verified successfully' });
+      }
+    } catch (error) {
+      console.error('Error verifying token:', error);
+      res.status(500).json({ message: 'Error verifying token', error });
+    }
+  });
+
 // orders
 router.route('/orders')
   .get(verifyAToken, async (req, res) => {
