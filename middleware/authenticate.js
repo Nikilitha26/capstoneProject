@@ -62,7 +62,12 @@ const verifyAToken = (req, res, next) => {
 };
 
 const isAdmin = (req, res, next) => {
-  if (req.body.role !== 'admin') {
+  const permissions = {
+    admin: ['read', 'write', 'delete'],
+    user: ['read']
+  };
+
+  if (!permissions[req.body.role].includes('read')) {
     res.status(403).json({ error: 'Only admins can access this page' });
     return;
   }
