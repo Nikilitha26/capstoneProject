@@ -10,7 +10,7 @@ router.post('/login', checkUser, loginUser)
 
 // orders
 router.route('/orders')
-  .get( async (req, res) => {
+  .get(verifyAToken, async (req, res) => {
     try {
       const orders = await getAllOrdersDb();
       if (!orders) {
@@ -25,7 +25,7 @@ router.route('/orders')
   });
 
   router.route('/orders')
-  .delete(async (req, res) => {
+  .delete( verifyAToken, async (req, res) => {
     try {
       const deletedOrders = await deleteAllOrdersDb();
       if (!deletedOrders) {
@@ -40,7 +40,7 @@ router.route('/orders')
   });
 
 router.route('/:userID/order')
-.get( async (req, res) => {
+.get( verifyAToken, async (req, res) => {
     try {
         const userID = req.params.userID;
         const orders = await getAllOrderDb(userID);
@@ -56,7 +56,7 @@ router.route('/:userID/order')
 });
 
 router.route('/:userID/order/:orderID')
-  .get( async (req, res) => {
+  .get( verifyAToken, async (req, res) => {
     try {
       const userID = req.params.userID;
       const orderID = req.params.orderID;
@@ -72,7 +72,7 @@ router.route('/:userID/order/:orderID')
     }
   });
 
-router.post('/:id/order', async (req, res) => {
+router.post('/:id/order', verifyAToken, async (req, res) => {
   try {
     const userID = req.params.id;
     const { prodID, date } = req.body;
@@ -93,7 +93,7 @@ router.post('/:id/order', async (req, res) => {
 });
 
 router.route('/:userID/order/:orderID')
-  .patch(async (req, res) => {
+  .patch(verifyAToken, async (req, res) => {
     try {
       const userID = req.params.userID;
       const orderID = req.params.orderID;
@@ -117,7 +117,7 @@ router.route('/:userID/order/:orderID')
   });
 
 router.route('/:userID/order/:orderID')
-  .delete(async (req, res) => {
+  .delete( verifyAToken, async (req, res) => {
     try {
       const userID = req.params.userID;
       const orderID = req.params.orderID;
@@ -137,7 +137,7 @@ router.route('/:userID/order/:orderID')
   });
 
   router.route('/:userID/order')
-.delete(async (req, res) => {
+.delete( verifyAToken, async (req, res) => {
   try {
     const userID = req.params.userID;
     const deletedOrders = await deleteUserOrdersDb(userID);
@@ -153,7 +153,7 @@ router.route('/:userID/order/:orderID')
 });
 
 router.route('/:userID/order/:orderID')
-.delete(async (req, res) => {
+.delete( verifyAToken, async (req, res) => {
   try {
     const userID = req.params.userID;
     const orderID = req.params.orderID;
@@ -173,11 +173,25 @@ router.route('/:userID/order/:orderID')
 
 router.
     route('/')
-    .get( getUsers)
+    .get(verifyAToken, async (req, res) => {
+        try {
+          const id = req.params.id;
+          const user = await getUserByIdDb(id);
+          if (!user) {
+            res.status(404).json({ message: `User with ID ${id} not found` });
+          } else {
+            res.json(user);
+          }
+        } catch (error) {
+          console.error('Error getting user:', error);
+          res.status(500).json({ message: 'Error getting user', error });
+        }
+      })
+
         .post(insertUser)
         
 router.route('/:id')
-  .get(async (req, res) => {
+  .get(verifyAToken, async (req, res) => {
     try {
       const id = req.params.id;
       const user = await getUserByIdDb(id);
@@ -191,9 +205,12 @@ router.route('/:id')
       res.status(500).json({ message: 'Error getting user', error });
     }
   })
-        .delete(deleteUser)
 
-  .patch(async (req, res) => {
+
+        .delete( verifyAToken, deleteUser)
+
+
+  .patch( verifyAToken, async (req, res) => {
     try {
       const id = req.params.id;
       const user = await getUserByIdDb(id);
