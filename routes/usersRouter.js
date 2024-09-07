@@ -93,6 +93,30 @@ router.post('/:id/order', async (req, res) => {
 });
 
 router.route('/:userID/order/:orderID')
+  .patch(async (req, res) => {
+    try {
+      const userID = req.params.userID;
+      const orderID = req.params.orderID;
+      const { date, prodID } = req.body;
+
+      // Check if the request body contains any other fields
+      if (Object.keys(req.body).length > 2 || !date || !prodID) {
+        res.status(400).json({ message: 'Only date and prodID fields can be updated' });
+      } else {
+        const updatedOrder = await updateOrderDb(userID, orderID, { date, prodID });
+        if (!updatedOrder) {
+          res.status(404).json({ message: `Order with ID ${orderID} not found` });
+        } else {
+          res.json({ message: `Order with ID ${orderID} updated successfully` });
+        }
+      }
+    } catch (error) {
+      console.error('Error updating order:', error);
+      res.status(500).json({ message: 'Error updating order', error });
+    }
+  });
+
+router.route('/:userID/order/:orderID')
   .delete(async (req, res) => {
     try {
       const userID = req.params.userID;
