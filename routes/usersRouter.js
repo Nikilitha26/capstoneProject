@@ -8,50 +8,9 @@ const router = express.Router()
 
 router.post('/login', checkUser, loginUser) 
 
-router.route('/verifyAToken')
-  .post(verifyAToken, async (req, res) => {
-    try {
-      const token = req.body.token;
-      const decodedToken = await verifyAToken(token);
-      if (!decodedToken) {
-        res.status(401).json({ message: 'Invalid token' });
-      } else {
-        res.json({ message: 'Token verified successfully' });
-      }
-    } catch (error) {
-      console.error('Error verifying token:', error);
-      res.status(500).json({ message: 'Error verifying token', error });
-    }
-  });
-
-  router.route('/refreshToken')
-  .post(async (req, res) => {
-    try {
-      const refreshToken = req.body.refreshToken;
-      if (!refreshToken) {
-        res.status(401).json({ message: 'No refresh token provided' });
-        return;
-      }
-
-      // Verify the refresh token
-      const decodedToken = await verifyAToken(refreshToken);
-      if (!decodedToken) {
-        res.status(401).json({ message: 'Invalid refresh token' });
-        return;
-      }
-
-      // Generate a new access token
-      const newToken = jwt.sign({ emailAdd: decodedToken.emailAdd, userId: decodedToken.userId, role: decodedToken.role }, process.env.SECRET_KEY, { expiresIn: '3h' });
-      res.json({ token: newToken, message: 'Token refreshed successfully' });
-    } catch (error) {
-      console.error('Error refreshing token:', error);
-      res.status(500).json({ message: 'Error refreshing token', error });
-    }
-  });
-
 // orders
 router.route('/orders')
-  .get(verifyAToken, async (req, res) => {
+  .get( async (req, res) => {
     try {
       const orders = await getAllOrdersDb();
       if (!orders) {
@@ -66,7 +25,7 @@ router.route('/orders')
   });
 
   router.route('/orders')
-  .delete( verifyAToken, async (req, res) => {
+  .delete(async (req, res) => {
     try {
       const deletedOrders = await deleteAllOrdersDb();
       if (!deletedOrders) {
@@ -81,7 +40,7 @@ router.route('/orders')
   });
 
 router.route('/:userID/order')
-.get( verifyAToken, async (req, res) => {
+.get( async (req, res) => {
     try {
         const userID = req.params.userID;
         const orders = await getAllOrderDb(userID);
@@ -97,7 +56,7 @@ router.route('/:userID/order')
 });
 
 router.route('/:userID/order/:orderID')
-  .get( verifyAToken, async (req, res) => {
+  .get( async (req, res) => {
     try {
       const userID = req.params.userID;
       const orderID = req.params.orderID;
@@ -113,7 +72,7 @@ router.route('/:userID/order/:orderID')
     }
   });
 
-router.post('/:id/order', verifyAToken, async (req, res) => {
+router.post('/:id/order', async (req, res) => {
   try {
     const userID = req.params.id;
     const { prodID, date } = req.body;
@@ -134,7 +93,7 @@ router.post('/:id/order', verifyAToken, async (req, res) => {
 });
 
 router.route('/:userID/order/:orderID')
-  .patch(verifyAToken, async (req, res) => {
+  .patch(async (req, res) => {
     try {
       const userID = req.params.userID;
       const orderID = req.params.orderID;
@@ -158,7 +117,7 @@ router.route('/:userID/order/:orderID')
   });
 
 router.route('/:userID/order/:orderID')
-  .delete( verifyAToken, async (req, res) => {
+  .delete(async (req, res) => {
     try {
       const userID = req.params.userID;
       const orderID = req.params.orderID;
@@ -178,7 +137,7 @@ router.route('/:userID/order/:orderID')
   });
 
   router.route('/:userID/order')
-.delete( verifyAToken, async (req, res) => {
+.delete(async (req, res) => {
   try {
     const userID = req.params.userID;
     const deletedOrders = await deleteUserOrdersDb(userID);
@@ -194,7 +153,7 @@ router.route('/:userID/order/:orderID')
 });
 
 router.route('/:userID/order/:orderID')
-.delete( verifyAToken, async (req, res) => {
+.delete(async (req, res) => {
   try {
     const userID = req.params.userID;
     const orderID = req.params.orderID;
@@ -212,43 +171,13 @@ router.route('/:userID/order/:orderID')
 
 //   users
 
-router.route('/verifyAToken')
-  .post(verifyAToken, (req, res) => {
-    try {
-      const token = req.body.token;
-      verifyAToken(token, (err, decodedToken) => {
-        if (err) {
-          res.status(401).json({ message: 'Invalid token' });
-        } else {
-          res.json({ message: 'Token verified successfully' });
-        }
-      });
-    } catch (error) {
-      console.error('Error verifying token:', error);
-      res.status(500).json({ message: 'Error verifying token', error });
-    }
-  });
-
 router.
     route('/')
-    // .get(async (req, res) => { // Add async keyword here
-    //     try {
-    //       const user = await getUsers(); 
-    //       if (!user) {
-    //         res.status(404).json({ message: `Users not found` });
-    //       } else {
-    //         res.json(user);
-    //       }
-    //     } catch (error) {
-    //       console.error('Error getting user:', error);
-    //       res.status(500).json({ message: 'Error getting user', error });
-    //     }
-    //   })
-    .get(getUsers)
+    .get( getUsers)
         .post(insertUser)
         
 router.route('/:id')
-  .get(verifyAToken, async (req, res) => {
+  .get(async (req, res) => {
     try {
       const id = req.params.id;
       const user = await getUserByIdDb(id);
@@ -262,12 +191,9 @@ router.route('/:id')
       res.status(500).json({ message: 'Error getting user', error });
     }
   })
+        .delete(deleteUser)
 
-
-        .delete( verifyAToken, deleteUser)
-
-
-  .patch( verifyAToken, async (req, res) => {
+  .patch(async (req, res) => {
     try {
       const id = req.params.id;
       const user = await getUserByIdDb(id);
