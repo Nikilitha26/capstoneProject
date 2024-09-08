@@ -49,11 +49,8 @@ const verifyAToken = (req, res, next) => {
         res.json({ message: 'token expired' });
         return;
       }
-      req.body.user = decoded.emailAdd;
-      req.body.userId = decoded.userId;
-      req.body.role = decoded.role; 
-      console.log(decoded);
-      next(null, decoded.role); // pass the user's role to the next function
+      req.user = decoded; // assign the decoded token to req.user
+      next(); // call next without any arguments
     });
   } catch (err) {
     console.error(err);
@@ -67,7 +64,7 @@ const isAdmin = (req, res, next) => {
     user: ['read']
   };
 
-  if (!permissions[req.body.role].includes('read')) {
+  if (!req.user || !permissions[req.user.role].includes('read')) {
     res.status(403).json({ error: 'Only admins can access this page' });
     return;
   }

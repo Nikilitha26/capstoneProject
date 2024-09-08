@@ -4,9 +4,14 @@ import { hash, compare} from 'bcrypt';
 import bcrypt from 'bcrypt';
 import { pool } from "../config/config.js";
 
-const getUsers = async(req,res)=>{
-    res.json(await getUsersDb());
-}
+const getUsers = (req, res) => {
+  if (!req.user) {
+    res.status(401).json({ error: 'Unauthorized' });
+    return;
+  }
+  // get all users logic here
+  res.json(users);
+};
 
 const getUser = async (req, res) => {
   const { id } = req.params;
@@ -29,7 +34,7 @@ const getUser = async (req, res) => {
 
 const insertUser = async (req, res) => {
   let { firstName, lastName, userAge, Gender, userRole, emailAdd, userPass, userProfile } = req.body
-  const hashedPass = await hash(userPass, 10);
+  const hashedPass = await bcrypt.hash(userPass, 10);
   try {
     await insertUserDb(firstName, lastName, userAge, Gender, userRole, emailAdd, userProfile, hashedPass)
     res.send('Data successfully inserted!')
@@ -75,16 +80,16 @@ const updateUser = async (req, res) => {
   Gender = Gender || user.Gender;
   userRole = userRole || user.userRole;
   emailAdd = emailAdd || user.emailAdd;
-  if (userPass) {
-    userPass = await bcrypt.hash(userPass, 10);
-  } else {
-    userPass = user.userPass;
-  }
   userProfile = userProfile || user.userProfile;
 
-  console.log('Updating user:', userID, firstName, lastName, userAge, Gender, userRole, emailAdd, userPass, userProfile);
+  let hashedPass = user.userPass;
+  if (userPass) {
+    hashedPass = await bcrypt.hash(userPass, 10);
+  }
+
+  console.log('Updating user:', userID, firstName, lastName, userAge, Gender, userRole, emailAdd, hashedPass, userProfile);
   try {
-    await updateUserDb(userID, firstName, lastName, userAge, Gender, userRole, emailAdd, userPass, userProfile);
+    await updateUserDb(userID, firstName, lastName, userAge, Gender, userRole, emailAdd, hashedPass, userProfile);
     res.json({ message: `User with ID ${userID} updated successfully` });
   } catch (error) {
     console.error('Error updating user:', error);

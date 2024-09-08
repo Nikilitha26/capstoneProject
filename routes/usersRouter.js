@@ -187,22 +187,38 @@ router.route('/:userID/order/:orderID')
 
 //   users
 
+router.route('/verifyAToken')
+  .post(verifyAToken, (req, res) => {
+    try {
+      const token = req.body.token;
+      verifyAToken(token, (err, decodedToken) => {
+        if (err) {
+          res.status(401).json({ message: 'Invalid token' });
+        } else {
+          res.json({ message: 'Token verified successfully' });
+        }
+      });
+    } catch (error) {
+      console.error('Error verifying token:', error);
+      res.status(500).json({ message: 'Error verifying token', error });
+    }
+  });
+
 router.
     route('/')
-    .get(verifyAToken, async (req, res) => {
-        try {
-          const id = req.params.id;
-          const user = await getUserByIdDb(id);
-          if (!user) {
-            res.status(404).json({ message: `User with ID ${id} not found` });
-          } else {
-            res.json(user);
-          }
-        } catch (error) {
-          console.error('Error getting user:', error);
-          res.status(500).json({ message: 'Error getting user', error });
-        }
-      })
+    // .get(async (req, res) => { // Add async keyword here
+    //     try {
+    //       const user = await getUsers(); 
+    //       if (!user) {
+    //         res.status(404).json({ message: `Users not found` });
+    //       } else {
+    //         res.json(user);
+    //       }
+    //     } catch (error) {
+    //       console.error('Error getting user:', error);
+    //       res.status(500).json({ message: 'Error getting user', error });
+    //     }
+    //   })
 
         .post(insertUser)
         
