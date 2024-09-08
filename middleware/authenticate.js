@@ -49,8 +49,8 @@ const verifyAToken = (req, res, next) => {
         res.json({ message: 'token expired' });
         return;
       }
-      req.user = decoded; // assign the decoded token to req.user
-      next(); // call next without any arguments
+      req.user = decoded; 
+      next(); 
     });
   } catch (err) {
     console.error(err);

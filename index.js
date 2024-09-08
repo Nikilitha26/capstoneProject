@@ -23,7 +23,6 @@ app.use('/users', usersRouter);
 app.use('/products', productsRouter);
 
 app.get('/admin', isAdmin, (req, res) => {
-  // Admin page logic here
 });
 
 app.listen(PORT, () => {

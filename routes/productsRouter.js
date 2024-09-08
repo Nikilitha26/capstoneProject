@@ -1,7 +1,6 @@
 import express from 'express'
 import {getProducts, getProduct, insertProduct, deleteProduct, updateProduct, } from '../contoller/productController.js'
 import { verifyAToken } from '../middleware/authenticate.js'
-// import { bookProductDb } from '../model/productsDb.js'
 
 const router = express.Router()
 
@@ -12,7 +11,6 @@ router.post('/order', verifyAToken, async (req, res) => {
       }
       const productId = req.body.prodID;
       const userID = req.user.userID;
-      // Call the booking logic here, e.g., update the product status, create an order, etc.
       const bookingResult = await bookProductDb(userID, productId);
       if (bookingResult) {
         res.json({ message: 'Product booked successfully' });
@@ -25,12 +23,6 @@ router.post('/order', verifyAToken, async (req, res) => {
     }
   });
 
-// router
-//   .route('/order')
-//   .post(verifyAToken, (req, res) => {
-//     console.log(req.body)
-//     res.json({ message: "item added to cart" })
-//   })
 
 router.get('/', getProducts)
 router.post('/', insertProduct)

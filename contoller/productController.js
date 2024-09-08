@@ -43,28 +43,5 @@ const updateProduct = async(req,res)=>{
     res.send('Update was successful')
 }
   
-// const bookProduct = async (req, res) => {
-//     try {
-//       const userID = req.body.userID;
-//       const prodID = req.body.prodID;
-//       const bookingResult = await bookProductDb(userID, prodID);
-//       if (bookingResult) {
-//         res.json({ message: 'Product booked successfully' });
-//       } else {
-//         throw new Error('Error booking product');
-//       }
-//     } catch (error) {
-//       console.error(error);
-//       res.status(500).json({ message: 'Error booking product' });
-//     }
-//   };
-
-// const bookProduct = async (req, res) => {
-//     console.log(req.body);
-//     let {id} = await getUsersDb(req.body.userID)
-//     console.log(id)
-//     await bookProductDb(id, req.body.prodID)
-//     res.json({message:"Product booked successfully!"})
-// }
 
 export {getProducts, getProduct, insertProduct, deleteProduct, updateProduct, }
