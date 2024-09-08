@@ -244,7 +244,7 @@ router.
     //       res.status(500).json({ message: 'Error getting user', error });
     //     }
     //   })
-
+    .get(getUsers)
         .post(insertUser)
         
 router.route('/:id')

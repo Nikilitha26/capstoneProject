@@ -4,14 +4,9 @@ import { hash, compare} from 'bcrypt';
 import bcrypt from 'bcrypt';
 import { pool } from "../config/config.js";
 
-const getUsers = (req, res) => {
-  if (!req.user) {
-    res.status(401).json({ error: 'Unauthorized' });
-    return;
-  }
-  // get all users logic here
-  res.json(users);
-};
+const getUsers = async(req,res)=>{
+    res.json(await getUsersDb());
+}
 
 const getUser = async (req, res) => {
   const { id } = req.params;
