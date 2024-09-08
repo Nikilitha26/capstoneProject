@@ -1,7 +1,7 @@
 import express from 'express'
 import {getUsers, getUser, insertUser, deleteUser, updateUser,loginUser, insertOrder,} from '../contoller/usersController.js'
 import { checkUser, verifyAToken, } from '../middleware/authenticate.js'
-import { updateUserDb, getOrderDb, updateOrderDb, deleteUserOrdersDb, deleteOrderDb , insertOrderDb, getAllOrdersDb, getAllOrderDb, getUserByIdDb, } from '../model/usersDb.js'
+import { updateUserDb, getOrderDb, updateOrderDb, deleteUserOrdersDb, deleteOrderDb , insertOrderDb, getAllOrdersDb, getAllOrderDb, getUserByIdDb, deleteAllOrdersDb } from '../model/usersDb.js'
 
 
 const router = express.Router()

@@ -155,4 +155,14 @@ const getAllOrdersDb = async () => {
     }
   };
 
-  export {getUsersDb, getUserDb, insertUserDb, deleteUserDb, updateUserDb, insertOrderDb, getOrderDb, updateOrderDb, deleteUserOrdersDb, deleteOrderDb,getAllOrdersDb, getAllOrderDb,  getUserByIdDb }
+  const deleteAllOrdersDb = async () => {
+    try {
+      const query = `DELETE FROM orders`;
+      const [result] = await pool.query(query);
+      return result.affectedRows;
+    } catch (error) {
+      console.error('Error deleting all orders:', error);
+      throw error;
+    }
+  };
+  export {getUsersDb, getUserDb, insertUserDb, deleteUserDb, updateUserDb, insertOrderDb, getOrderDb, updateOrderDb, deleteUserOrdersDb, deleteOrderDb,getAllOrdersDb, getAllOrderDb,  getUserByIdDb, deleteAllOrdersDb }
