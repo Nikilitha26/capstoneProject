@@ -68,17 +68,6 @@ const getAllOrdersDb = async () => {
   }
 };
 
-const deleteAllOrdersDb = async () => {
-  try {
-    const query = `DELETE FROM orders`;
-    const [result] = await pool.query(query);
-    return result.affectedRows > 0;
-  } catch (error) {
-    console.error('Error deleting all orders:', error);
-    throw error;
-  }
-};
-
   const getAllOrderDb = async (userID) => {
     try {
       const query = `SELECT * FROM orders WHERE userID = ?`;
@@ -166,4 +155,4 @@ const deleteAllOrdersDb = async () => {
     }
   };
 
-  export {getUsersDb, getUserDb, insertUserDb, deleteUserDb, updateUserDb, insertOrderDb, getOrderDb, updateOrderDb, deleteUserOrdersDb, deleteOrderDb,getAllOrdersDb, getAllOrderDb,  getUserByIdDb, deleteAllOrdersDb }
+  export {getUsersDb, getUserDb, insertUserDb, deleteUserDb, updateUserDb, insertOrderDb, getOrderDb, updateOrderDb, deleteUserOrdersDb, deleteOrderDb,getAllOrdersDb, getAllOrderDb,  getUserByIdDb }

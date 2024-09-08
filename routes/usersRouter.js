@@ -1,7 +1,7 @@
 import express from 'express'
 import {getUsers, getUser, insertUser, deleteUser, updateUser,loginUser, insertOrder,} from '../contoller/usersController.js'
 import { checkUser, verifyAToken, } from '../middleware/authenticate.js'
-import { updateUserDb, getOrderDb, updateOrderDb, deleteUserOrdersDb, deleteOrderDb , insertOrderDb, getAllOrdersDb, getAllOrderDb, getUserByIdDb, deleteAllOrdersDb } from '../model/usersDb.js'
+import { updateUserDb, getOrderDb, updateOrderDb, deleteUserOrdersDb, deleteOrderDb , insertOrderDb, getAllOrdersDb, getAllOrderDb, getUserByIdDb, } from '../model/usersDb.js'
 
 
 const router = express.Router()
@@ -97,18 +97,12 @@ router.route('/:userID/order/:orderID')
     try {
       const userID = req.params.userID;
       const orderID = req.params.orderID;
-      const { date, prodID } = req.body;
-
-      // Check if the request body contains any other fields
-      if (Object.keys(req.body).length > 2 || !date || !prodID) {
-        res.status(400).json({ message: 'Only date and prodID fields can be updated' });
+      const updatedOrderData = req.body;
+      const updatedOrder = await updateOrderDb(userID, orderID, updatedOrderData);
+      if (!updatedOrder) {
+        res.status(404).json({ message: `Order with ID ${orderID} not found` });
       } else {
-        const updatedOrder = await updateOrderDb(userID, orderID, { date, prodID });
-        if (!updatedOrder) {
-          res.status(404).json({ message: `Order with ID ${orderID} not found` });
-        } else {
-          res.json({ message: `Order with ID ${orderID} updated successfully` });
-        }
+        res.json({ message: `Order with ID ${orderID} updated successfully` });
       }
     } catch (error) {
       console.error('Error updating order:', error);
