@@ -24,6 +24,31 @@ router.route('/verifyAToken')
     }
   });
 
+  router.route('/refreshToken')
+  .post(async (req, res) => {
+    try {
+      const refreshToken = req.body.refreshToken;
+      if (!refreshToken) {
+        res.status(401).json({ message: 'No refresh token provided' });
+        return;
+      }
+
+      // Verify the refresh token
+      const decodedToken = await verifyAToken(refreshToken);
+      if (!decodedToken) {
+        res.status(401).json({ message: 'Invalid refresh token' });
+        return;
+      }
+
+      // Generate a new access token
+      const newToken = jwt.sign({ emailAdd: decodedToken.emailAdd, userId: decodedToken.userId, role: decodedToken.role }, process.env.SECRET_KEY, { expiresIn: '3h' });
+      res.json({ token: newToken, message: 'Token refreshed successfully' });
+    } catch (error) {
+      console.error('Error refreshing token:', error);
+      res.status(500).json({ message: 'Error refreshing token', error });
+    }
+  });
+
 // orders
 router.route('/orders')
   .get(verifyAToken, async (req, res) => {
