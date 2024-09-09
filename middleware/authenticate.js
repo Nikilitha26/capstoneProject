@@ -26,7 +26,9 @@ const checkUser = async (req, res) => {
   if (result) {
 
     let token = jwt.sign({ emailAdd: emailAdd, userId: user.userId, role: user.role }, process.env.SECRET_KEY, { expiresIn: '1h' });
-    res.json({ token: token, message: 'You have signed in!!', user});
+    let refreshToken = jwt.sign({ emailAdd: emailAdd, userId: user.userId, role: user.role }, process.env.REFRESH_SECRET_KEY, { expiresIn: '2h' });
+    res.json({ token: token, refreshToken: refreshToken, message: 'You have signed in!!', user});
+  
   } else {
     res.status(401).json({ error: 'Password incorrect' });
   }
@@ -70,5 +72,31 @@ const isAdmin = (req, res, next) => {
   }
   next();
 };
+
+const refreshToken = async (req, res) => {
+  try {
+    let refreshToken;
+    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
+      refreshToken = req.headers.authorization.split(' ')[1];
+    } else if (req.headers.cookie) {
+      refreshToken = req.headers.cookie.split('=')[1];
+    }
+    if (!refreshToken) {
+      res.json({ message: 'No refresh token provided' });
+      return;
+    }
+    jwt.verify(refreshToken, process.env.REFRESH_SECRET_KEY, (err, decoded) => {
+      if (err) {
+        res.json({ message: 'refresh token expired' });
+        return;
+      }
+      const newToken = jwt.sign({ emailAdd: decoded.emailAdd, userId: decoded.userId, role: decoded.role }, process.env.SECRET_KEY, { expiresIn: '1h' });
+      res.json({ token: newToken, message: 'Token refreshed successfully' });
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error refreshing token');
+  }
+};
     
-    export {checkUser, verifyAToken, isAdmin}
+    export {checkUser, verifyAToken, isAdmin, refreshToken}

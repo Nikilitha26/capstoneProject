@@ -12,6 +12,7 @@ const app = express();
 
 app.use(cors({
     origin: ['http://localhost:8080', 'https://capstoneproject-1-9k8p.onrender.com'],
+
     credentials: true,
     headers: ['Content-Type', 'Authorization']
   }));
