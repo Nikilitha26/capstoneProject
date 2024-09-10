@@ -19,6 +19,11 @@ app.use(cors({
 
 app.use(express.json());
 app.use(express.static('public'));
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  next();
+});
 
 app.use('/users', usersRouter);
 app.use('/products', productsRouter);
@@ -32,6 +37,12 @@ app.listen(PORT, () => {
 
 app.get('^/$|/capstoneaproject-backend', (req, res) => {
   res.status(200).sendFile(path.resolve('./static/html/index.html'));
+});
+
+app.options('*', (req, res) => {
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  res.send(200);
 });
 
 app.get('*', (req, res) => {
