@@ -12,7 +12,6 @@ const app = express();
 
 app.use(cors({
     origin: ['http://localhost:8080', 'https://capstoneproject-1-9k8p.onrender.com'],
-
     credentials: true,
     headers: ['Content-Type', 'Authorization']
   }));
@@ -22,7 +21,8 @@ app.use(express.static('public'));
 
 app.use('/users', usersRouter);
 app.use('/products', productsRouter);
-app.post('/users/login', (req, res) => {
+app.post('/users/login', cors(), (req, res) => {
+
 
   res.header('Access-Control-Allow-Origin', 'http://localhost:8080');
 
