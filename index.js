@@ -22,6 +22,11 @@ app.use(express.static('public'));
 
 app.use('/users', usersRouter);
 app.use('/products', productsRouter);
+app.post('/users/login', (req, res) => {
+
+  res.header('Access-Control-Allow-Origin', 'http://localhost:8080');
+
+});
 
 app.get('/admin', isAdmin, (req, res) => {
 });
