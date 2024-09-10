@@ -7,13 +7,6 @@ import { isAdmin } from './middleware/authenticate.js';
 
 config();
 
-const WebSocket = require('ws');
-const wss = new WebSocket.Server({ noServer: true });
-
-wss.on('headers', (headers, req) => {
-  headers.push('Access-Control-Allow-Origin: *');
-});
-
 let PORT = process.env.PORT || 5005;
 const app = express();
 
@@ -28,8 +21,7 @@ app.use(express.static('public'));
 
 app.use('/users', usersRouter);
 app.use('/products', productsRouter);
-app.post('/users/login', cors(), (req, res) => {
-
+app.post('/users/login', (req, res) => {
 
   res.header('Access-Control-Allow-Origin', 'http://localhost:8080');
 
