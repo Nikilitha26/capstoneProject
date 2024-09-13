@@ -35,7 +35,7 @@
         <p>No results found for "{{ searchQuery }}".</p>
       </div>
     </div>
-    <div v-else>Loading products...</div>
+    <!-- <div v-else>Loading products...</div> -->
   </div>
 </template>
 <script>
