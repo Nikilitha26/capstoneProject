@@ -3,7 +3,7 @@ import express from 'express';
 import { config } from 'dotenv';
 import productsRouter from './routes/productsRouter.js';
 import usersRouter from './routes/usersRouter.js';
-import { isAdmin } from './middleware/authenticate.js';
+import { isAdmin, refreshToken } from './middleware/authenticate.js';
 
 config();
 
