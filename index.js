@@ -13,7 +13,7 @@ const app = express();
 app.use(cors({
     origin: ['http://localhost:8080', 'https://capstoneproject-1-9k8p.onrender.com'],
     credentials: true,
-    headers: ['Content-Type', 'Authorization', ]
+    headers: ['Content-Type', 'Authorization', 'Access-Control-Allow-Origin']
   }));
 
 app.use(express.json());
@@ -23,11 +23,7 @@ app.use('/users', usersRouter);
 app.use('/products', productsRouter);
 app.post('/users/login', (req, res) => {
 
-  res.header('http://localhost:8080');
-
-});
-app.post('/refresh-token', (req, res) => {
-  res.header( 'http://localhost:8080');
+  res.header('Access-Control-Allow-Origin', 'http://localhost:8080');
 
 });
 
