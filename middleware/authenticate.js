@@ -2,7 +2,8 @@ import {config} from 'dotenv'
 import { compare } from "bcrypt";
 import { getUserDb } from "../model/usersDb.js";
 import jwt from 'jsonwebtoken'
-config({ path: './.env' });
+// config({ path: './.env' });
+config();
 
 
 const checkUser = async (req, res) => {
@@ -22,6 +23,7 @@ const checkUser = async (req, res) => {
   }
 
   let result = await compare(userPass, hashedPass);
+console.log(process.env.SECRET_KEY);
 
   if (result) {
 
