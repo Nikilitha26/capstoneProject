@@ -1,7 +1,7 @@
 <template>
   <div class="products">
     <SpinnerComponent v-if="loading"/>
-    <div class="d-flex">
+    <div class="row">
   <div class="col-md-12">
 <div class="d-flex justify-content-between">
   <input type="text" v-model="searchQuery" placeholder="Search products..." class="form-control me-1" style="width: 280px; margin-top: 30px; position:relative; left: 20px; margin-bottom: 20px; margin-top: 50px;">
@@ -49,7 +49,6 @@ export default {
       loading: true,
     }
   },
-  components: {SpinnerComponent},
   watch: {
     searchQuery(newVal, oldVal) {
       if (newVal) {

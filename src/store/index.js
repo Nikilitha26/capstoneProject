@@ -208,7 +208,7 @@ export default createStore({
       try {
         const response = await axios.patch(`https://capstoneproject-1-9k8p.onrender.com/products/${product.prodID}`, product);
         commit('updateProductInArray', product);
-    
+        location.reload();
         // Update bookedProducts array if the product is already booked
         const bookedProductIndex = state.bookedProducts.findIndex(bp => bp.prodID === product.prodID);
         if (bookedProductIndex !== -1) {

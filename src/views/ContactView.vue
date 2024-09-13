@@ -1,57 +1,94 @@
 <template>
-    <div class="container">
-      <div class="row">
-        <div class="col-md-4">
-          <h2 class="contact">Contact Us</h2>
-          <div style="margin-bottom: 40px;"></div>
-          <ul class="list-unstyled">
-            <li>
-  <i class="fas fa-phone animate__animated animate__headShake animate__infinite "></i>
-  <span>+27 82 402 1820</span>
-</li>
-            <li>
-                <i class="fab fa-instagram"></i>
-              <span>mindwell_scent_official</span>
-            </li>
-            <li>
-                <i class="fab fa-facebook"></i>
-              <span>mindwell_scent_official</span>
-            </li>
-            <li>
-                <i class="fas fa-map-marker-alt"></i>
-              <span>Lansdowne, Cape Town, Western Cape, 7744</span>
-            </li>
-          </ul>
-        </div>
-        <div class="col-md-8">
-          <h2 id="get">Get in Touch</h2>
-          <form>
-            <div class="form-group">
-              <label for="name">Name</label>
-              <input type="text" class="form-control" id="name" placeholder="Enter your name..." style="width: 70%">
-            </div>
-            <div class="form-group">
-              <label for="email">Email</label>
-              <input type="email" class="form-control" id="email" placeholder="Enter your email..." style="width: 70%">
-            </div>
-            <div class="form-group">
-              <label for="message">Message</label>
-              <textarea class="form-control" id="message" placeholder="Enter your message..." style="width: 70%"></textarea>
-            </div>
-            <button type="submit" class="btn0">Submit</button>
-          </form>
-        </div>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4">
+        <h2 class="contact">Contact Us</h2>
+        <div style="margin-bottom: 40px;"></div>
+        <ul class="list-unstyled">
+          <li>
+            <i class="fas fa-phone animate__animated animate__headShake animate__infinite "></i>
+            <span>+27 82 402 1820</span>
+          </li>
+          <li>
+            <i class="fab fa-instagram"></i>
+            <span>mindwell_scent_official</span>
+          </li>
+          <li>
+            <i class="fab fa-facebook"></i>
+            <span>mindwell_scent_official</span>
+          </li>
+          <li>
+            <i class="fas fa-map-marker-alt"></i>
+            <span>Lansdowne, Cape Town, Western Cape, 7744</span>
+          </li>
+        </ul>
+      </div>
+      <div class="col-md-8">
+        <h2 id="get">Get in Touch</h2>
+        <form @submit.prevent="handleSubmit" action="https://formspree.io/f/xqazobnd" method="POST">
+          <div class="form-group">
+    <label for="name">Name</label>
+    <input type="text" class="form-control" id="name" placeholder="Enter your name..." style="width: 70%" v-model="name">
+    <div v-if="errors.name" class="error">{{ errors.name }}</div>
+  </div>
+  <div class="form-group">
+    <label for="email">Email</label>
+    <input type="email" class="form-control" id="email" placeholder="Enter your email..." style="width: 70%" v-model="email">
+    <div v-if="errors.email" class="error">{{ errors.email }}</div>
+  </div>
+  <div class="form-group">
+    <label for="message">Message</label>
+    <textarea class="form-control" id="message" placeholder="Enter your message..." style="width: 70%" v-model="message"></textarea>
+    <div v-if="errors.message" class="error">{{ errors.message }}</div>
+  </div>
+          <button type="submit" class="btn0">Submit</button>
+        </form>
       </div>
     </div>
-  </template>
-  
-  <script>
-  export default {
-    name: "ContactForm"
+  </div>
+</template>
+
+<script>
+export default {
+  name: "ContactForm",
+  data() {
+    return {
+      submitted: false,
+      name: '',
+      email: '',
+      message: '',
+      errors: {}
+    }
+  },
+  methods: {
+    handleSubmit() {
+      this.errors = {};
+      if (!this.name) {
+        this.errors.name = "Name is required";
+      }
+      if (!this.email) {
+        this.errors.email = "Email is required";
+      }
+      if (!this.message) {
+        this.errors.message = "Message is required";
+      }
+      if (Object.keys(this.errors).length === 0) {
+        this.name = '';
+        this.email = '';
+        this.message = '';
+        alert('Message submitted successfully!');
+        this.submitted = true;
+        this.$router.push({ name: 'home' });
+      }
+    }
   }
-  </script>
+}
+</script>
   
   <style scoped>
+    .error {
+    color: red;
+  }
   body {
     font-family: Arial, sans-serif;
     background-color: #f5f5f5;
