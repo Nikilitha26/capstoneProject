@@ -19,9 +19,9 @@
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  border: 2px solid #ccc;
+  border: 2px solid black;
   border-top: 2px solid #333;
-  animation: spin 1s linear infinite;
+  animation: spin 3s linear infinite;
 }
 
 .spinner-circle {
