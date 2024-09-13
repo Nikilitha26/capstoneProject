@@ -9,23 +9,25 @@ config();
 const checkUser = async (req, res) => {
   const { emailAdd, userPass } = req.body;
   const user = (await getUserDb(emailAdd))[0];
-
+  
+  console.log(1+emailAdd, userPass,'secret'+process.env.SECRET_KEY);
   if (!user) {
     res.status(401).json({ error: 'User not found' });
     return;
   }
 
   const hashedPass = user.userPass;
-
+  console.log(2+emailAdd, userPass,'secret'+process.env.SECRET_KEY);
+  
   if (!hashedPass) {
     res.status(401).json({ error: 'Hashed password not found' });
     return;
   }
-
+  
   let result = await compare(userPass, hashedPass);
-console.log(process.env.SECRET_KEY);
-
+  
   if (result) {
+    console.log(3+emailAdd, userPass,'secret'+process.env.SECRET_KEY);
 
     let token = jwt.sign({ emailAdd: emailAdd, userId: user.userId, role: user.role }, process.env.SECRET_KEY, { expiresIn: '1h' });
     let refreshToken = jwt.sign({ emailAdd: emailAdd, userId: user.userId, role: user.role }, process.env.REFRESH_SECRET_KEY, { expiresIn: '2h' });
