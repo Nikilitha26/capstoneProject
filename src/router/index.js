@@ -17,15 +17,21 @@ const routes = [
     name: 'products',
     component: () => import('../views/ProductsView.vue')
   },
+  // {
+  //   path: '/checkout',
+  //   name: 'checkout',
+  //   component: () => import('../views/CheckoutView.vue')
+  // },
   {
-    path: '/checkout',
+    path: '/checkout/:prodID?',
     name: 'checkout',
-    component: () => import('../views/CheckoutView.vue')
+    component: () => import('../views/CheckoutView.vue'),
+    props: true
   },
   {
     path: '/admin',
     name: 'admin',
-    component: () => import('../views/AdminView.vue')
+    component: () => import('../views/AdminView.vue'),
   },
   {
     path: '/contact',
@@ -35,8 +41,53 @@ const routes = [
   {
     path: '/login',
     name: 'login',
-    component: () => import('../views/LogInView.vue')
-  }
+    component: () => import('../views/LogInViewOrSignUp.vue')
+  },
+  {
+    path: '/products/:id',
+    name: 'product',
+    component: () => import('../views/SingleProductView.vue')
+  },
+  // {
+  //   path: '/products/:id',
+  //   name: 'product',
+  //   component: () => import('../views/SingleProductView.vue')
+  // },
+  {
+    path: '/payment/:prodID',
+    name: 'payment',
+    component: () => import('../components/paymentComponent.vue')
+  },
+  // {
+  //   path: '/thankyou',
+  //   name: 'thankyou',
+  //   component: () => import('../components/ThankYouComponent.vue')
+  // },
+  {
+    path: '/thankyou/:prodID',
+    name: 'thankyou',
+    component: () => import('../components/ThankYouComponent.vue')
+  },
+  {
+    path: '/details',
+    name: 'details',
+    component: () => import('../components/UserDetailsComponent.vue')
+  },
+  {
+    path: '/orders',
+    name: 'orders',
+    component: () => import('../components/UserOrdersComponent.vue')
+  },
+  {
+    path: '/settings',
+    name: 'settings',
+    component: () => import('../components/SettingsComponent.vue')
+  },
+  // {
+  //   path: '/products/:id',
+  //   name: 'product',
+  //   component: () => import('../views/SingleProductView.vue')
+  // },
 ]
 
 const router = createRouter({
