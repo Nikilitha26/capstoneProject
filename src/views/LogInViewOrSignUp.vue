@@ -109,8 +109,8 @@ export default {
           this.loginError = 'Invalid email';
           return;
         }
-        if (this.loginForm.userPass.length < 8) {
-          this.loginError = 'Password must be at least 8 characters';
+        if (this.loginForm.userPass.length < 4) {
+          this.loginError = 'Password must be at least 4 characters';
           return;
         }
         await this.$store.dispatch('loginUser', this.loginForm);
