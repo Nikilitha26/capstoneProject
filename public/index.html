@@ -36,7 +36,7 @@
             <tr>
                 <td>/users/:id</td>
                 <td>DELETE</td>
-                <td>Deletes a by id</td>
+                <td>Deletes a user by id</td>
             </tr>
             <tr>
                 <td>/users/:id</td>
@@ -70,6 +70,43 @@
                 <td>/products/:id</td>
                 <td>PATCH</td>
                 <td>Edits all information of a product by id</td>
+            </tr>
+                <th colspan="3">Orders Table</th>
+            </tr>
+            <tr>
+                <td>/users/orders/</td>
+                <td>GET</td>
+                <td>Gets all of the orders.</td>
+            </tr>
+            <tr>
+                <td>/users/:userID/order</td>
+                <td>GET</td>
+                <td>Gets all orders by user id</td>
+            </tr>
+            <tr>
+                <td>/users/:userID/order/:orderID</td>
+                <td>GET</td>
+                <td>Gets a single order by id</td>
+            </tr>
+            <tr>
+                <td>/users/:id/order</td>
+                <td>POST</td>
+                <td>Inserts all order by user id</td>
+            </tr>
+            <tr>
+                <td>/users/:userID/order/:orderID</td>
+                <td>PATCH</td>
+                <td>Edits all information of an order by id</td>
+            </tr>
+            <tr>
+                <td>/users/:userID/order/:orderID</td>
+                <td>DELETE</td>
+                <td>Deletes an order of a user by id</td>
+            </tr>
+            <tr>
+                <td>/users/:userID/order</td>
+                <td>DELETE</td>
+                <td>Deletes an order of a user by id</td>
             </tr>
         </tbody>
     </table>
