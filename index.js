@@ -11,7 +11,7 @@ let PORT = process.env.PORT || 5005;
 const app = express();
 
 app.use(cors({
-    origin: ['http://localhost:8080', 'https://capstoneproject-1-9k8p.onrender.com'],
+    origin: ['http://localhost:8080', 'https://capstoneproject-dcb91.web.app'],
     credentials: true,
     headers: ['Content-Type', 'Authorization', 'Access-Control-Allow-Origin']
   }));

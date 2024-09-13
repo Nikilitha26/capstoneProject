@@ -27,7 +27,7 @@ const checkUser = async (req, res) => {
   let result = await compare(userPass, hashedPass);
   
   if (result) {
-    console.log(3+emailAdd, userPass,'secret'+process.env.SECRET_KEY);
+    console.log(3 +emailAdd, userPass,'secret'+process.env.SECRET_KEY);
 
     let token = jwt.sign({ emailAdd: emailAdd, userId: user.userId, role: user.role }, process.env.SECRET_KEY, { expiresIn: '1h' });
     let refreshToken = jwt.sign({ emailAdd: emailAdd, userId: user.userId, role: user.role }, process.env.REFRESH_SECRET_KEY, { expiresIn: '2h' });
