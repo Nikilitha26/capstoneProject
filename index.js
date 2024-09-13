@@ -26,6 +26,7 @@ app.post('/users/login', (req, res) => {
   res.header('Access-Control-Allow-Origin', 'http://localhost:8080');
 
 });
+app.post('/refresh-token', refreshToken);
 
 app.get('/admin', isAdmin, (req, res) => {
 });

@@ -48,11 +48,15 @@ const verifyAToken = (req, res, next) => {
     }
     jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
       if (err) {
-        res.json({ message: 'token expired' });
+        if (err.name === 'TokenExpiredError') {
+          res.json({ message: 'Token expired' });
+        } else {
+          res.json({ message: 'Invalid token' });
+        }
         return;
       }
-      req.user = decoded; 
-      next(); 
+      req.user = decoded;
+      next();
     });
   } catch (err) {
     console.error(err);
@@ -87,7 +91,11 @@ const refreshToken = async (req, res) => {
     }
     jwt.verify(refreshToken, process.env.REFRESH_SECRET_KEY, (err, decoded) => {
       if (err) {
-        res.json({ message: 'refresh token expired' });
+        if (err.name === 'TokenExpiredError') {
+          res.json({ message: 'Refresh token expired' });
+        } else {
+          res.json({ message: 'Invalid refresh token' });
+        }
         return;
       }
       const newToken = jwt.sign({ emailAdd: decoded.emailAdd, userId: decoded.userId, role: decoded.role }, process.env.SECRET_KEY, { expiresIn: '1h' });
