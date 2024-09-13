@@ -135,6 +135,7 @@ export default {
 
   .modal-body {
     padding: 20px;
+    color: rgb(148, 118, 103) !important;
   }
 
   .modal-footer {
