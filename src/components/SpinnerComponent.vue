@@ -1,46 +1,45 @@
 <template>
-  <div class="spinner">
-    <div class="spinner-inner">
-      <div class="spinner-circle"></div>
+  <div class="loader">
+    <div class="loader-inner">
+      <div class="loader-bar"></div>
     </div>
   </div>
 </template>
 
 <style scoped>
-.spinner {
+.loader {
   position: absolute;
-  top: 50%;
+  top: 200px;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 1000;
 }
 
-.spinner-inner {
+.loader-inner {
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  border: 2px solid black;
-  border-top: 2px solid #333;
-  animation: spin 3s linear infinite;
+  border: 2px solid rgb(148, 118, 103);
+  border-top: 2px solid rgb(148, 118, 103);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
-.spinner-circle {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background-color: #333;
+.loader-bar {
+  width: 0%;
+  height: 100%;
+  background-color: rgb(148, 118, 103);
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  top: 0;
+  left: 0;
+  animation: load 5s linear infinite;
 }
 
-@keyframes spin {
+@keyframes load {
   0% {
-    transform: rotate(0deg);
+    width: 0%;
   }
   100% {
-    transform: rotate(360deg);
+    width: 100%;
   }
 }
 </style>

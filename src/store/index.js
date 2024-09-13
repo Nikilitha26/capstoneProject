@@ -352,7 +352,6 @@ export default createStore({
         console.log(token);
         
         if (response.data.message) {
-          location.reload();
           toast("Signed Up Successfully!!", {
             "theme": "auto",
             "type": "default",
@@ -361,6 +360,7 @@ export default createStore({
           });
         }
         await router.push('/');
+        location.reload();
       } catch (error) {
         console.error(error);
         console.error(error.response.data);
@@ -411,7 +411,7 @@ export default createStore({
         commit('setUser', user);
       } catch (error) {
         console.error('Error getting user:', error);
-        commit('setUser', null); // Set user to null if error occurs
+        commit('setUser', null); 
       }
     },
 
