@@ -1,6 +1,5 @@
 <template>
   <div class="product">
-    <SpinnerComponent v-if="loading"/>
     <div class="row">
       <div class="col-md-6">
         <img :src="product?.prodUrl" alt="Product Image" class="img-fluid img-thumbnail">
@@ -19,15 +18,7 @@
 </template>
 
 <script>
-import SpinnerComponent from '../components/SpinnerComponent.vue';
-
 export default {
-  components: {SpinnerComponent},
-  data() {
-    return {
-      showLoader: true
-    }
-  },
   computed: {
     product() {
       console.log('Product computed property:', this.$store.state.product);
