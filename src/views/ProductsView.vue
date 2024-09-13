@@ -35,7 +35,7 @@
         <p>No results found for "{{ searchQuery }}".</p>
       </div>
     </div>
-    <!-- <div v-else>Loading products...</div> -->
+    <div v-else>Loading products...</div>
   </div>
 </template>
 <script>
@@ -44,12 +44,12 @@ import SpinnerComponent from '../components/SpinnerComponent.vue';
 export default {
   data() {
     return {
-      components: {SpinnerComponent},
       searchQuery: '',
       sortOption: 'name',// default sort option
       loading: true,
     }
   },
+  components: {SpinnerComponent},
   watch: {
     searchQuery(newVal, oldVal) {
       if (newVal) {

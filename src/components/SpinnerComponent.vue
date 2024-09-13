@@ -1,4 +1,3 @@
-// Spinner.vue
 <template>
   <div class="spinner">
     <div class="spinner-inner">
