@@ -127,6 +127,10 @@ export default {
 };
 </script>
 <style scoped>
+.h1{
+  position: relative;
+  top: 20px;
+}
 .checkout {
   max-width: 800px;
   margin: 0 auto;
@@ -136,6 +140,8 @@ export default {
   font-style: normal;
 }
 .responsive-table {
+  position: relative;
+  top: 40px;
   width: 100%;
   border-collapse: collapse;
   font-family: "Cormorant", serif;
@@ -157,12 +163,18 @@ export default {
   font-style: normal;
 }
 .btn7{
+  position: relative;
+  top: 70px;
   margin-right: 10px;
+}
+.btn8{
+  position: relative;
+  top: 70px;
 }
 .btn9{
   position: relative;
-  top: 30px;
-  right: 330px
+  top: 70px;
+  right: 342px
 } 
 .btn7:hover{
   background-color: white;
@@ -182,6 +194,10 @@ export default {
 }
 .check{
   font-size: 22px;
+}
+.mb-3{
+  position: relative;
+  top: 50px;
 }
 
 
