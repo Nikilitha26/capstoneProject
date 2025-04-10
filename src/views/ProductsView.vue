@@ -4,8 +4,16 @@
 
     <!-- Search and Sorting -->
     <div class="search-sort-bar">
-      <input type="text" v-model="searchQuery" placeholder="Search products..." class="form-control me-1" />
-      <button class="btn2" @click="searchProducts">Search</button>
+      <div class="search-group">
+  <input
+    type="text"
+    v-model="searchQuery"
+    placeholder="Search products..."
+    class="form-control custom-search-input"
+  />
+  <button class="btn2 search-btn" @click="searchProducts">Search</button>
+</div>
+
       <select v-model="sortOption" class="form-select form-select-sm">
         <option value="name">Sort by Name</option>
         <option value="category">Sort by Category</option>
@@ -144,11 +152,52 @@ export default {
   .card-item {
     flex: 1 1 calc(50% - 40px);
   }
+  .form-select {
+    position: relative;
+    bottom: 20px;
+    width: 100%;
+    max-width: 300px;
+    align-self: center;
+  }
+
 }
 
 @media (max-width: 480px) {
   .card-item {
     flex: 1 1 100%;
+    position: relative;
+    bottom: 50px;
+  }
+  /* .search-group {
+    width: 100%;
+    flex-direction: column;
+    gap: 10px;
+  } */
+
+  .custom-search-input {
+    width: 200px !important; 
+    margin-bottom: 10px;
+    align-self: center;
+    position: relative;
+    left: 45px;
+    align-items: center;
+  }
+
+  .search-btn {
+    /* width: 100%; */
+    /* max-width: 200px;   */
+    position: relative;
+    bottom: 48px !important;
+    align-self: center;
+    align-items: center;
+  }
+
+  .form-select {
+    width: 255px !important; 
+    align-self: center;
+    position: relative;
+    left: 45px;
+    align-items: center;
   }
 }
 
@@ -213,8 +262,9 @@ export default {
 
 .btn2 {
   position: relative;
-  right: 380px;
-  height: 41px;
+  left: 165px;
+  bottom: 38px;
+  height: 38px;
   border: none;
   border-radius: 5px;
   color: white;

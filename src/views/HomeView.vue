@@ -164,6 +164,7 @@ export default {
   grid-template-columns: 1fr 1fr;
   grid-gap: 20px;
   /* z-index: -1;  */
+  
 }
 
 .top-row::before {
@@ -264,6 +265,9 @@ export default {
   font-optical-sizing: auto;
   font-weight: 1000;
   font-style: normal;
+  flex-direction: column;
+    align-items: center;
+    text-align: center;
 }
 
 .explore-button {
@@ -512,6 +516,9 @@ export default {
     height: auto;
     padding-bottom: 20px;
     margin-bottom: 0;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
   }
   .left-column {
   grid-column: 1;
@@ -533,6 +540,8 @@ export default {
     height: 100%;
     padding: 0px;
     width: 300px;
+    display: flex;
+    justify-content: center;
   }
   .welcome-paragraph {
     font-size: 16px;
@@ -545,6 +554,7 @@ export default {
     font-optical-sizing: auto;
     font-weight: 500;
     font-style: normal;
+    
   }
 
 .welcome-heading {
@@ -572,11 +582,15 @@ export default {
   .image-container {
     position: relative;
     top: 130px; 
-    left: 30px;
+    left: 70px;
     width: 250px;
     height: 250px;
     padding: 0;
     margin-right: 10px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+
   }
   .image-container img {
   position: absolute;
@@ -626,6 +640,7 @@ export default {
   overflow: hidden;
   padding: 0;
   margin-top: 0;
+    text-align: center;
 }
 
 .middles-column {
@@ -639,12 +654,13 @@ export default {
 .middles-paragraph {
     font-size: 18px;
     position: relative;
-    right: 310px;
+    right: 300px;
     top: 0px;
     /* margin-bottom: 50px; */
   }
   .lefts-column {
-    margin-top: 0;
+    position: relative;
+    left: 40px;
   }
   .lefts-column img {
     max-width: 200px;
@@ -662,7 +678,8 @@ export default {
     grid-column: 1;
     margin-top: 200px;
     margin-right: 30px;
-
+    position: relative;
+    left: 40px;
   }
   .rights-column img{
     position: relative;
@@ -674,7 +691,7 @@ export default {
   .word {
     width: 90vw;
     position: relative;
-    top: 290px; 
+    top: 240px; 
     right: 300px;
     margin-bottom: 50px;
     font-family: "Cormorant", serif;
@@ -684,8 +701,8 @@ export default {
     }
     .pdf-button {
       position: relative;
-      top: 260px; 
-      right: 310px;
+      top: 230px; 
+      right: 305px;
       font-size: 15px;
       margin-bottom: 20px;
       padding: 7px;
@@ -707,7 +724,7 @@ export default {
   .card-container {
     width: 100%;
     margin: 10px;
-    left: -10px !important;
+    left: -20px !important;
   }
   .card-slider {
     flex-direction: column;
@@ -744,14 +761,39 @@ export default {
     margin-bottom: 20px;
     font-size: 15px;
     position: relative;
-    left: 80px;
+    left: 100px;
   }
   #cat{
     margin-top: 20px;
   }
   }
 
-  @media only screen and (min-width: 400px) and (max-width: 700px) {
+  @media only screen and (min-width: 414px) {
+    .welcome-paragraph {
+    font-size: 18px;
+    width: 90vw;
+    line-height: 1.2;
+    padding: 10px;
+    position: relative;
+    left: 0px !important;
+    font-family: "Cormorant", serif;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style: normal;
+  }
+  .welcome-heading{
+    position: relative;
+    left: 0px !important;
+  }
+  .explore-button{
+    position: relative;
+    right: 70px;
+    top: 20px !important;
+  }
+
+  }
+
+  @media only screen and (min-width: 401px) and (max-width: 700px) {
   .top-row {
     grid-template-columns: 1fr;
     height: auto;

@@ -1,11 +1,16 @@
 <template>
-    <div>
-      <footer class="footer">
-        <div class="container">
-          <div class="row">
-            <div class="col-md-4">
-              <h5 id="follow">Follow us:</h5>
-              <div class="follow-container">
+  <div id="app-layout">
+    <!-- Content Area -->
+    <div class="content">
+      <!-- Your main content goes here -->
+    </div>
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-4">
+            <h5 id="follow">Follow us:</h5>
+            <div class="follow-container">
               <div class="social-media">
                 <img id="mg1" src="https://nikilitha26.github.io/capstoneImages/instagram-removebg-preview.png" alt="icon" class="img-fluid border-5 rounded-circle custom-image">
                 <p id="maj">mindwell_scent_official</p>
@@ -15,20 +20,21 @@
                 <p id="maj1">mindwell_scent_official</p>
               </div>
             </div>
-            </div>
+          </div>
 
-            <div class="col-md-4">
-              <h5 id="shop">Shop:</h5>
-              <ul>
-                <div class="shop">
-  <li id="about"><router-link to="/about">About</router-link></li>
-  <li id="product"><router-link to="/products">Products</router-link></li>
-  <li id="admin"><router-link to="/admin">Admin</router-link></li>
-  <li id="contact"><router-link to="/contact">Contact</router-link></li>
-</div>
-</ul>
-            </div>
-            <div class="col-md-4">
+          <div class="col-md-4">
+            <h5 id="shop">Shop:</h5>
+            <ul>
+              <div class="shop">
+                <li id="about"><router-link to="/about">About</router-link></li>
+                <li id="product"><router-link to="/products">Products</router-link></li>
+                <li id="admin"><router-link to="/admin">Admin</router-link></li>
+                <li id="contact"><router-link to="/contact">Contact</router-link></li>
+              </div>
+            </ul>
+          </div>
+
+          <div class="col-md-4">
             <h5 id="acc">Accepted card payments:</h5>
             <div class="accepted-cards">
               <img id="visa" src="https://nikilitha26.github.io/nodejsImages/imgbin-visa-credit-card-debit-card-visa-CVupnbKnhhXkYdQ3EY1sZ3ErQ-removebg-preview.png" alt="visa" class="img-fluid">
@@ -38,12 +44,11 @@
             </div>
           </div>
         </div>
-          
-          <p class="foot" > Copyright &copy; MindWell  {{ currentYear }} Company. All rights reserved.</p>
-        </div>
-      </footer>
-    </div>
-  </template>
+        <p class="foot">Copyright &copy; MindWell {{ currentYear }} Company. All rights reserved.</p>
+      </div>
+    </footer>
+  </div>
+</template>
   
   <script>
   export default {
@@ -54,13 +59,33 @@
     }
   }
   </script>
+
   <style >
+html, body {
+  height: 50%;
+  margin: 0;
+}
+
+#app-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 62vh; 
+}
+
+.content {
+  flex-grow: 1;
+}
+
  .footer {
   background-color: rgb(148, 118, 103);
   color: #fff;
   padding: 30px;
   display: flex;
   justify-content: space-between;
+  /* flex-shrink: 0; 
+  margin-top: auto; */
+  width: 100%;
+  position: relative;
 }
 
 .row {
@@ -250,6 +275,7 @@ a:hover {
  .foot{
   position: relative;
   left: 0px;
+  top: 20px;
  }
  .footer {
       background-color: rgb(148, 118, 103);
@@ -257,5 +283,12 @@ a:hover {
       padding: 30px;
       width: 300px;
   }
+  }
+
+  @media (max-width: 440px) {
+    .foot{
+      position: relative;
+      top: 30px !important;
+    }
   }
   </style>
