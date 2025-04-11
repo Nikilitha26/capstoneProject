@@ -172,6 +172,13 @@ export default {
 
 }
 
+@media (max-width: 390) {
+  .search-sort-bar{
+    position: relative;
+    left: 25px;
+  }
+}
+
 @media (max-width: 480px) {
   .card-item {
     flex: 1 1 100%;
@@ -184,6 +191,7 @@ export default {
     flex-direction: column;
     gap: 10px;
   } */
+
 
   .custom-search-input {
     width: 200px !important; 
@@ -211,11 +219,11 @@ export default {
     align-items: center;
   }
   .card-container {
-    gap: 0px; /* reduce gap between cards */
-    padding: 0px 0px; /* reduce padding around container */
+    gap: 0px; 
+    padding: 0px 0px; 
   }
   .card {
-    margin-top: 10px; /* optional: reduce top margin of cards */
+    margin-top: 10px; 
   }
 }
 

@@ -16,18 +16,19 @@
       </thead>
       <tbody>
         <tr v-for="orderProduct in orderProducts" :key="orderProduct.orderID">
-  <td>{{ orderProduct.prodID }}</td>
-  <td>{{ orderProduct.prodName }}</td>
-  <td><img :src="orderProduct.prodUrl" alt="Product Image" width="50" height="50"></td>
-  <td>{{ orderProduct.quantity }}</td>
-  <td>{{ orderProduct.amount }}</td>
-  <td>{{ orderProduct.quantity * orderProduct.amount }}</td>
-  <td>{{ orderProduct.date }}</td>
-  <td>
+  <td data-label="Product ID">{{ orderProduct.prodID }}</td>
+  <td data-label="Product Name">{{ orderProduct.prodName }}</td>
+  <td data-label="Product Image"><img :src="orderProduct.prodUrl" alt="Product Image" width="50" height="50" /></td>
+  <td data-label="Quantity">{{ orderProduct.quantity }}</td>
+  <td data-label="Amount">{{ orderProduct.amount }}</td>
+  <td data-label="Total Price">{{ orderProduct.quantity * orderProduct.amount }}</td>
+  <td data-label="Date">{{ orderProduct.date.slice(0, 10) }}</td>
+  <td data-label="Actions">
     <button @click="confirmDeleteOrder(orderProduct.orderID)" class="btn13">Delete</button>
     <button @click="openUpdateModal(orderProduct)" class="btn13">Update</button>
   </td>
 </tr>
+
       </tbody>
     </table>
     <p v-else>No orders have been made yet.</p>
@@ -101,7 +102,7 @@ export default {
   computed: {
     ...mapState(['orders', 'products']),
   orderProducts() {
-    if (!this.products) return []; // or some default value
+    if (!this.products) return []; 
     return this.orders.map((order) => {
       const product = this.getProduct(order.prodID);
       return { ...order, ...product };
@@ -115,7 +116,7 @@ created() {
   methods: {
     ...mapActions(['getAllOrders', 'deleteOrder', 'updateOrder', 'getOrders', 'getProducts']),
   getProduct(prodID) {
-    if (!this.products) return null; // or some default value
+    if (!this.products) return null; 
     const product = this.products.find((product) => product.prodID === prodID);
     return product;
   },
@@ -143,12 +144,10 @@ created() {
         updatedOrder
       })
       .then(() => {
-        // Display a success message to the user
       })
       .catch(error => {
         if (error.response.status === 404) {
           console.error('Order not found');
-          // Display an error message to the user
         } else {
           console.error('Error updating order:', error);
         }
@@ -270,138 +269,45 @@ created() {
   background-color: white;
 }
 
-/* For small screens (e.g., mobile devices) */
-@media only screen and (max-width: 600px) {
-  .checkout {
-    text-align: center !important; 
-    justify-content: center !important;
-  }
-  .h1{
-    margin-top: 20px;
-  }
+@media only screen and (max-width: 768px) {
   .responsive-table {
-    font-size: 0.8em;
-    border: none !important;
-    background-color: none;
-    margin: 0, auto;
-  }
-  .responsive-table th, .responsive-table td {
-    padding: 5px;
-    border: none !important;
-  }
-  .responsive-table th {
-    text-align: left;
-    visibility: hidden;
-    border: none;
-    border-top: none;
+    border: 0;
+    width: 100%;
   }
 
-  .responsive-table {
-    display: flex;
-    flex-wrap: wrap;
-    margin: 0, auto;
-    position: relative;
-    right: 50px;
-    top: 40px;
-    font-family: "Cormorant", serif;
-    font-optical-sizing: auto;
-    font-weight: 800;
-    font-style: normal;
-    font-size: 16px;
-  }
-  .orders{
-    position: relative;
-    top: 20px;
-    bottom: 20px;
-  }
-  .responsive-table tr {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    margin-bottom: 20px;
-    border-bottom: none;
-  }
-  .responsive-table th, .responsive-table td {
-    width: 100%;
-    padding: 10px;
-    border: none;
-  }
-  .responsive-table th {
-    font-weight: bold;
-    border: none;
-  }
-  .responsive-table td {
-    padding-top: 0;
-    border: none;
-    border-top:none ;
-  }
-  .responsive-table thead tr {
-    border-top: none; 
-  }
-  .responsive-table thead td {
-    border-top: none; 
-  }
-  .responsive-table th:nth-child(5), .responsive-table td:nth-child(5) {
+  .responsive-table thead {
     display: none;
   }
-  .btn9{
-    position: relative;
-    left: 10px;
-  }
-}
 
-/* For medium screens (e.g., tablets) */
-@media only screen and (min-width: 601px) and (max-width: 900px) {
-  .responsive-table {
-    font-size: 0.9em;
-    position: relative;
-    top: 10px;
-   margin-bottom: 20px;
-   justify-content: space-around;
-  }
-  .responsive-table th, .responsive-table td {
-    padding: 10px;
-  }
-    .btn9{
-    position: relative;
-    left: 10px;
-  }
-  .orders{
-    position: relative;
-    top: 10px;
-  }
-}
-
-/* For large screens (e.g., desktops) */
-@media only screen and (min-width: 901px) {
-  .responsive-table {
-    font-size: 1em;
-  }
-  .responsive-table th, .responsive-table td {
-    padding: 15px;
-  }
-}
-
-/* For medium screens (e.g., tablets) */
-@media only screen and (min-width: 601px) and (max-width: 678px) {
-  .responsive-table {
-    font-size: 0.85em;
-    position: relative;
-    top: 10px;
+  .responsive-table tr {
+    display: block;
     margin-bottom: 20px;
-    justify-content: space-around;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0 0 5px rgba(0,0,0,0.1);
   }
-  .responsive-table th, .responsive-table td {
-    padding: 8px;
+
+  .responsive-table td {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    border: none;
+    border-bottom: 1px solid #eee;
+    font-size: 0.9em;
   }
-  .btn9{
-    position: relative;
-    left: 10px;
+
+  .responsive-table td:last-child {
+    border-bottom: 0;
   }
-  .orders{
-    position: relative;
-    top: 10px;
+
+  .responsive-table td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    flex-basis: 50%;
+    text-align: left;
   }
 }
+
 </style>
 
