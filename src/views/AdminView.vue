@@ -314,7 +314,7 @@
           <td>{{ order.orderID }}</td>
           <td>{{ order.userID }}</td>
           <td>{{ order.prodID }}</td>
-          <td>{{ order.date }}</td>
+          <td>{{ order.date.slice(0, 10) }}</td>
           <td>
             <!-- <button class="btn btn-secondary" @click="editOrder(order)">Edit</button> -->
             <button class="btn16" @click="deleteAdminOrder(order.orderID, order.userID)">Delete</button>
