@@ -1,7 +1,7 @@
 <template>
   <div class="checkout">
     <h1 class="h1">Checkout</h1><br>
-    <button type="button" class="btn9" @click="clearCheckout" v-if="products && products.length > 0">Clear Checkout</button><br><br>
+    <button type="button" class="btn9" id="btn9" @click="clearCheckout" v-if="products && products.length > 0">Clear Checkout</button><br><br>
     <div v-if="products && products.length > 0">
       <form>
         <table class="table table-striped table-bordered border-dark responsive-table">
@@ -200,6 +200,30 @@ export default {
   top: 50px;
 }
 
+@media only screen and (max-width: 320px) {
+  .responsive-table{
+    position: relative;
+    right: 75px !important;
+  }
+  #checkout-date{
+    width: 280px;
+    position: relative !important;
+    left: 20px !important;
+  }
+  /* .mb-3{
+    position: relative;
+    top: -10px;
+  }
+  .btn7{
+    position: relative;
+    top: -5px;
+  }
+  .btn8{
+    position: relative;
+    top: -5px;
+  } */
+}
+
 
 /* For small screens (e.g., mobile devices) */
 @media only screen and (max-width: 600px) {
@@ -215,6 +239,10 @@ export default {
     border: none !important;
     background-color: none;
     margin: 0, auto;
+    position: relative;
+    right: 40px;
+    top: 10px;
+    width: 250px;
   }
   .responsive-table th, .responsive-table td {
     padding: 5px;
@@ -231,16 +259,17 @@ export default {
     display: flex;
     flex-wrap: wrap;
     margin: 0, auto;
+    width: 250px;
   }
   .responsive-table tr {
     display: flex;
     flex-direction: column;
-    width: 100%;
+    width: 150%;
     margin-bottom: 20px;
     border-bottom: none;
   }
   .responsive-table th, .responsive-table td {
-    width: 100%;
+    width: 150%;
     padding: 10px;
     border: none;
   }
@@ -264,7 +293,25 @@ export default {
   }
   .btn9{
     position: relative;
-    left: 10px;
+    left: 0px;
+    top: 30px;
+  }
+  #checkout-date{
+    width: 280px;
+    position: relative;
+    left: 58px;
+  }
+  .mb-3{
+    position: relative;
+    top: -10px;
+  }
+  .btn7{
+    position: relative;
+    top: -5px;
+  }
+  .btn8{
+    position: relative;
+    top: -5px;
   }
 }
 
