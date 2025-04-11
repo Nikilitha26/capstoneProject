@@ -72,7 +72,11 @@
             <button type="button" class="btn-close" @click="closeDeleteModal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <p>Are you sure you want to delete order #{{ orderToDelete.orderID }} for product {{ orderToDelete.prodID }} on {{ orderToDelete.date }}?</p>
+            <p>
+  Are you sure you want to delete order #{{ orderToDelete.orderID }}
+  for product {{ orderToDelete.prodID }} on {{ orderToDelete.date?.split('T')[0] }}?
+</p>
+
           </div>
           <div class="modal-footer">
             <button type="button" class="btn13" @click="closeDeleteModal">Cancel</button>
