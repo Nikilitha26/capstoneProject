@@ -1,67 +1,93 @@
 <template scoped>
   <div class="about">
-    <div class="div" style="background-color: white; padding: 10px; display: flex;">
-      <div style="width: 50%; margin-right: 20px;">
-        <img id="foto" src="https://nikilitha26.github.io/capstoneImages/landing.jpg" alt="About Us Image" style="width: 100%; height: 480px;">
-      </div>
-      <div style="width: 50%; color: black; text-align: center;"> 
-        <h2 >ABOUT US</h2>
-        <p id="parra">MindWell was established in 2024 with the goal of providing easy access to high-quality 
-          mental health care across South Africa. Recognizing the barriers to traditional in-person 
-          therapy, such as time constraints, location, and cost, MindWell was founded on the belief 
-          that everyone should have access to the support they need, regardless of where they live. 
-          Today, MindWell has grown to become a leading provider of online mental health services,
-           with a team of experienced psychologists and counselors serving clients in Cape Town, 
-           Durban, Johannesburg, and Pretoria.
-          With a growing network of mental health professionals, MindWell is committed to meeting 
-          the diverse needs of our clients, offering services in a variety of therapeutic modalities, 
-          including CBT, DBT, mindfulness-based therapies, and psychodynamic therapy. Our team of 
-          compassionate and skilled clinicians is dedicated to helping our clients achieve their
-           personal goals and find greater emotional well-being. Whether you are struggling with
-            anxiety, depression, relationship issues, or other challenges, we invite you to discover
-             the peace of mind and support that awaits you at MindWell.
-        </p>
-      </div>
+    <!-- Spinner Overlay -->
+    <div v-if="loading" class="spinner-overlay">
+      <SpinnerComponent />
     </div>
-    <div id="back" style="background-color: rgb(181, 139, 102); color: white; padding: 200px; text-align: center;"> 
-      <h2 class="title">OUR TEAM</h2>
 
-<div class="our-team" >
-  <div class="team-member">
-    <img id="piccc" src="https://nikilitha26.github.io/Boot-img/Image/IMG_8063.PNG" alt="Team Member 1">
-    <div class="team-info">
-      <h3 class="h3">Nikilitha Kakaza</h3>
-      <p class="founder">Founder & CEO</p>
-      <p class="par">Nikilitha Kakaza, the Founder and CEO of MindWell, is a passionate mental health advocate with a 
-        personal connection to the issue. After witnessing the struggles of her own family members to access mental health 
-        care in South Africa, Nikilitha was inspired to create a platform that would break down the barriers to traditional
-         therapy. With a background in psychology and a deep commitment to making mental health care more accessible, she
-          founded MindWell with the goal of connecting individuals and families to high-quality, affordable, and convenient 
-          online mental health services.</p>
-    </div>
-  </div>
-  <div class="team-member">
-    <img id="piccc" src="https://nikilitha26.github.io/capstoneImages/a9da3df52d836a48a091afb99134cfd6.jpg" alt="Team Member 2">
-    <div class="team-info">
-      <h3 class="chris">Chris Oasis</h3>
-      <p class="founder">Founder & CMO</p>
-      <p class="par">Christopher Oasis is the Chief Marketing Officer and Co-Founder of MindWell. With a background in marketing 
-        and a personal experience with depression, Christopher has a deep understanding of the importance of mental health care
-         and the challenges that can come with seeking help. Committed to helping people find the support they need, Christopher
-          co-founded MindWell with Nikilitha Kakaza to create a more accessible and convenient platform for mental health services.
-           As the CMO, he is dedicated to spreading awareness about mental health and promoting the services of MindWell to the wider community.</p>
-    </div>
-  </div>
-</div>
+    <!-- Main Content -->
+    <div v-else>
+      <div class="div" style="background-color: white; padding: 10px; display: flex;">
+        <div style="width: 50%; margin-right: 20px;">
+          <img id="foto" src="https://nikilitha26.github.io/capstoneImages/landing.jpg" alt="About Us Image" style="width: 100%; height: 480px;">
+        </div>
+        <div style="width: 50%; color: black; text-align: center;"> 
+          <h2>ABOUT US</h2>
+          <p id="parra">MindWell was established in 2024 with the goal of providing easy access to high-quality 
+            mental health care across South Africa. Recognizing the barriers to traditional in-person 
+            therapy, such as time constraints, location, and cost, MindWell was founded on the belief 
+            that everyone should have access to the support they need, regardless of where they live. 
+            Today, MindWell has grown to become a leading provider of online mental health services,
+             with a team of experienced psychologists and counselors serving clients in Cape Town, 
+             Durban, Johannesburg, and Pretoria.
+            With a growing network of mental health professionals, MindWell is committed to meeting 
+            the diverse needs of our clients, offering services in a variety of therapeutic modalities, 
+            including CBT, DBT, mindfulness-based therapies, and psychodynamic therapy. Our team of 
+            compassionate and skilled clinicians is dedicated to helping our clients achieve their
+             personal goals and find greater emotional well-being. Whether you are struggling with
+              anxiety, depression, relationship issues, or other challenges, we invite you to discover
+               the peace of mind and support that awaits you at MindWell.
+          </p>
+        </div>
+      </div>
+
+      <div id="back" style="background-color: rgb(181, 139, 102); color: white; padding: 200px; text-align: center;"> 
+        <h2 class="title">OUR TEAM</h2>
+
+        <div class="our-team">
+          <div class="team-member">
+            <img id="piccc" src="https://nikilitha26.github.io/Boot-img/Image/IMG_8063.PNG" alt="Team Member 1">
+            <div class="team-info">
+              <h3 class="h3">Nikilitha Kakaza</h3>
+              <p class="founder">Founder & CEO</p>
+              <p class="par">Nikilitha Kakaza, the Founder and CEO of MindWell, is a passionate mental health advocate with a 
+                personal connection to the issue. After witnessing the struggles of her own family members to access mental health 
+                care in South Africa, Nikilitha was inspired to create a platform that would break down the barriers to traditional
+                 therapy. With a background in psychology and a deep commitment to making mental health care more accessible, she
+                  founded MindWell with the goal of connecting individuals and families to high-quality, affordable, and convenient 
+                  online mental health services.</p>
+            </div>
+          </div>
+
+          <div class="team-member">
+            <img id="piccc" src="https://nikilitha26.github.io/capstoneImages/a9da3df52d836a48a091afb99134cfd6.jpg" alt="Team Member 2">
+            <div class="team-info">
+              <h3 class="chris">Chris Oasis</h3>
+              <p class="founder">Founder & CMO</p>
+              <p class="par">Christopher Oasis is the Chief Marketing Officer and Co-Founder of MindWell. With a background in marketing 
+                and a personal experience with depression, Christopher has a deep understanding of the importance of mental health care
+                 and the challenges that can come with seeking help. Committed to helping people find the support they need, Christopher
+                  co-founded MindWell with Nikilitha Kakaza to create a more accessible and convenient platform for mental health services.
+                   As the CMO, he is dedicated to spreading awareness about mental health and promoting the services of MindWell to the wider community.</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import SpinnerComponent from "@/components/SpinnerComponent.vue";
+
 export default {
-  
-}
+  components: {
+    SpinnerComponent,
+  },
+  data() {
+    return {
+      loading: true,
+    };
+  },
+  mounted() {
+    // Simulate loading for 1.5 seconds
+    setTimeout(() => {
+      this.loading = false;
+    }, 1500);
+  },
+};
 </script>
+
 <style scoped>
   .about img {
     border-radius: 10px;

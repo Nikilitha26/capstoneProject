@@ -1,45 +1,43 @@
 <template>
-  <div class="loader">
-    <div class="loader-inner">
-      <div class="loader-bar"></div>
-    </div>
+  <div class="spinner-overlay">
+    <div class="spinner"></div>
+    <p>Loading...</p>
   </div>
 </template>
 
+<script>
+export default {
+  name: 'SpinnerComponent'
+}
+</script>
+
 <style scoped>
-.loader {
-  position: absolute;
-  top: 200px;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 1000;
+.spinner-overlay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
+  padding-top: 100px;
 }
 
-.loader-inner {
+.spinner {
+  border: 6px solid #f3f3f3;
+  border-top: 6px solid rgb(148, 118, 103);
+  border-radius: 50%;
   width: 50px;
   height: 50px;
-  border-radius: 50%;
-  border: 2px solid rgb(148, 118, 103);
-  border-top: 2px solid rgb(148, 118, 103);
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  animation: spin 1s linear infinite;
 }
 
-.loader-bar {
-  width: 0%;
-  height: 100%;
-  background-color: rgb(148, 118, 103);
-  position: absolute;
-  top: 0;
-  left: 0;
-  animation: load 5s linear infinite;
+p {
+  margin-top: 10px;
+  font-family: "Cormorant", serif;
+  color: rgb(148, 118, 103);
 }
 
-@keyframes load {
-  0% {
-    width: 0%;
-  }
-  100% {
-    width: 100%;
-  }
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 </style>

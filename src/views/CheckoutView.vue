@@ -1,8 +1,13 @@
 <template>
   <div class="checkout">
-    <h1 class="h1">Checkout</h1><br>
-    <button type="button" class="btn9" id="btn9" @click="clearCheckout" v-if="products && products.length > 0">Clear Checkout</button><br><br>
-    <div v-if="products && products.length > 0">
+    <h1 class="h1">Checkout</h1><br />
+    <button type="button" class="btn9" id="btn9" @click="clearCheckout" v-if="products && products.length > 0">Clear Checkout</button><br /><br />
+
+    <!-- Spinner when loading -->
+    <SpinnerComponent v-if="loading" />
+
+    <!-- Checkout form -->
+    <div v-else-if="products && products.length > 0">
       <form>
         <table class="table table-striped table-bordered border-dark responsive-table">
           <thead>
@@ -18,11 +23,11 @@
           </thead>
           <tbody>
             <tr v-for="(product, index) in products" :key="product.prodID">
-              <td><img :src="product.prodUrl" alt="Product Image" width="100" height="100"></td>
+              <td><img :src="product.prodUrl" alt="Product Image" width="100" height="100" /></td>
               <td>{{ product.prodName }}</td>
               <td>{{ product.Category }}</td>
               <td>
-                <input type="number" v-model="product.quantity" min="1" :max="product.amount" class="form-control">
+                <input type="number" v-model="product.quantity" min="1" :max="product.amount" class="form-control" />
               </td>
               <td>R{{ product.amount }}</td>
               <td>R{{ (product.amount * product.quantity).toFixed(2) }}</td>
@@ -32,28 +37,47 @@
             </tr>
           </tbody>
         </table>
-        
+
         <div class="mb-3">
-  <label for="checkin-date" class="form-label">Check In Date:</label>
-  <input type="date" id="checkout-date" v-model="checkInDate" :min="today" class="form-control" required @blur="dateTouched = true">
-  <small v-if="dateTouched && !checkInDate" class="text-danger">Please enter a date</small>
-</div>
+          <label for="checkin-date" class="form-label">Check In Date:</label>
+          <input
+            type="date"
+            id="checkout-date"
+            v-model="checkInDate"
+            :min="today"
+            class="form-control"
+            required
+            @blur="dateTouched = true"
+          />
+          <small v-if="dateTouched && !checkInDate" class="text-danger">Please enter a date</small>
+        </div>
+
         <button type="button" class="btn7" @click="backToProducts">Back to Products</button>
         <button type="button" class="btn8" @click="continueBooking">Continue Booking</button>
       </form>
     </div>
-    <div v-else-if="loading">Loading product...</div>
+
+    <!-- Empty message -->
     <div v-else-if="!products || products.length === 0">
       <p class="check">Checkout is empty.</p>
     </div>
-    <div v-else>Error loading product. Please try again.</div>
+
+    <!-- Fallback error message -->
+    <div v-else>
+      <p>Error loading product. Please try again.</p>
+    </div>
   </div>
 </template>
 
 <script>
-import {useCookies} from 'vue3-cookies'
-const {cookies} = useCookies()
+import SpinnerComponent from '@/components/SpinnerComponent.vue'
+import { useCookies } from 'vue3-cookies'
+const { cookies } = useCookies()
+
 export default {
+  components: {
+    SpinnerComponent
+  },
   data() {
     return {
       checkInDate: '',
@@ -64,7 +88,6 @@ export default {
   },
   computed: {
     products() {
-      console.log('Booked Products:', this.$store.state.bookedProducts);
       return this.$store.state.bookedProducts;
     },
     userId() {
@@ -73,59 +96,55 @@ export default {
   },
   methods: {
     continueBooking() {
-    if (!this.checkInDate) {
-      this.dateTouched = true;
-      return;
-    }
-      // Continuing with the booking process
-      console.log('Continue Booking clicked')
-      console.log('UserId:', this.userId)
-      console.log('Product ID:', this.products[0].prodID)
-      console.log('CheckIn Date:', this.checkInDate)
-      cookies.set('checkInDate', this.checkInDate)
+      if (!this.checkInDate) {
+        this.dateTouched = true;
+        return;
+      }
+
+      cookies.set('checkInDate', this.checkInDate);
+
       this.$store.dispatch('insertOrderDb', {
         productId: this.products[0].prodID,
         checkInDate: this.checkInDate,
         userId: this.userId,
       })
-      .then((response) => {
-        console.log('Order inserted successfully:', response)
-        console.log('Navigating to payment route...')
-        this.$router.push({ name: 'payment', params: { prodID: this.products[0].prodID } })
-      })
-      .catch((error) => {
-        console.error('Error inserting order:', error)
-      })
-      this.$router.afterEach((to, from) => {
-        console.log(to.fullPath)
-      })
+        .then((response) => {
+          console.log('Order inserted successfully:', response);
+          this.$router.push({ name: 'payment', params: { prodID: this.products[0].prodID } });
+        })
+        .catch((error) => {
+          console.error('Error inserting order:', error);
+        });
     },
     deleteProduct(index) {
-      console.log('Delete Product clicked');
       this.$store.commit('deleteBookedProduct', index);
     },
     backToProducts() {
-      console.log('Back to Products clicked');
       this.$router.push({ name: 'products' });
     },
     clearCheckout() {
-      console.log('Clear Checkout clicked');
       this.$store.commit('clearBookedProducts');
     }
   },
   mounted() {
-  this.loading = true
-  const prodID = this.$route.params.prodID
-  if (!prodID) {
-    console.error('Error: Product ID is undefined')
-    return
+    this.loading = true;
+    const prodID = this.$route.params.prodID;
+
+    setTimeout(() => {
+      if (!prodID) {
+        this.loading = false;
+        return;
+      }
+
+      this.$store.dispatch('getProduct', prodID).finally(() => {
+        this.loading = false;
+      });
+    }, 1500);
   }
-  this.$store.dispatch('getProduct', prodID).finally(() => {
-    this.loading = false
-  })
-},
-};
+}
 </script>
+
+
 <style scoped>
 .h1{
   position: relative;

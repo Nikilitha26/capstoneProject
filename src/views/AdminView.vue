@@ -1,6 +1,8 @@
 <template scoped>
   <div>
-    <div class="container">
+    <SpinnerComponent v-if="isLoading" />
+
+    <div v-else class="container">
       <h1 class="admin">Admin View</h1><br>
       <h3 class="items">ITEMS TABLE</h3>
       <button class="btn17" @click="showAddProductModal">Add Product</button>
@@ -328,11 +330,16 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import SpinnerComponent from '@/components/SpinnerComponent.vue'
 
 export default {
   name: 'AdminView',
+  components: {
+    SpinnerComponent
+  },
   data() {
     return {
+      loading: true, 
       showConfirmModal: false,
       confirmModalText: '',
       confirmDeleteID: null,
@@ -340,13 +347,13 @@ export default {
       showAddModal: false,
       showEditModal: false,
       firstNameError: "",
-    lastNameError: "",
-    userAgeError: "",
-    genderError: "",
-    userRoleError: "",
-    emailError: "",
-    userProfileError: "",
-    userPassError: "",
+      lastNameError: "",
+      userAgeError: "",
+      genderError: "",
+      userRoleError: "",
+      emailError: "",
+      userProfileError: "",
+      userPassError: "",
       newProduct: {
         prodName: '',
         prodDescription: '',

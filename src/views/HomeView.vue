@@ -1,92 +1,95 @@
 <template>
   <div class="home">
-    <div class="top-row" :style="{ backgroundImage: `url(${imageUrl})` }">
-      <div class="left-column">
-        <h1 class="welcome-heading">Welcome to MindWell!</h1>
-        <p class="welcome-paragraph"> We are dedicated to providing compassionate,
-           evidence-based mental health care to individuals and families across South Africa. Whether you are
-           located in Cape Town, Durban, Johannesburg, or Pretoria, our team of experienced psychologists and 
-           counselors is here to help you find the support and guidance you need to achieve optimal well-being. 
-           With a wide range of expertise in areas such as anxiety, depression, addiction, and relationship issues, 
-           we are committed to helping our clients reach their personal goals and live their best lives. Thank you 
-           for choosing MindWell as your partner on your journey towards mental health and wellness.
-        </p>
-        <button class="explore-button" @click="$router.push('/products')">Explore More</button>
-      </div>
-      <div class="right-column">
-        <div class="image-container">
-          <div v-for="(image, index) in images" :key="index" class="image-wrapper">
-            <img :src="image.src" :class="{ active: currentIndex === index }" />
-            <div class="image-title-container">
-              <h2 class="image-title">{{ image.title }}</h2>
+    <SpinnerComponent v-if="loading" />
+
+<div v-else>
+      <div class="top-row" :style="{ backgroundImage: `url(${imageUrl})` }">
+        <div class="left-column">
+          <h1 class="welcome-heading">Welcome to MindWell!</h1>
+          <p class="welcome-paragraph">
+            We are dedicated to providing compassionate, evidence-based mental health care to individuals and families across South Africa. Whether you are located in Cape Town, Durban, Johannesburg, or Pretoria, our team of experienced psychologists and counselors is here to help you find the support and guidance you need to achieve optimal well-being. With a wide range of expertise in areas such as anxiety, depression, addiction, and relationship issues, we are committed to helping our clients reach their personal goals and live their best lives. Thank you for choosing MindWell as your partner on your journey towards mental health and wellness.
+          </p>
+          <button class="explore-button" @click="$router.push('/products')">Explore More</button>
+        </div>
+        <div class="right-column">
+          <div class="image-container">
+            <div v-for="(image, index) in images" :key="index" class="image-wrapper">
+              <img :src="image.src" :class="{ active: currentIndex === index }" />
+              <div class="image-title-container">
+                <h2 class="image-title">{{ image.title }}</h2>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-        <div class="middle-row">
-      <div class="lefts-column">
-        <img src="https://nikilitha26.github.io/capstoneImages/OIP.jpeg" alt="Image 1">
+      <div class="middle-row">
+        <div class="lefts-column">
+          <img src="https://nikilitha26.github.io/capstoneImages/OIP.jpeg" alt="Image 1">
+        </div>
+        <div class="middles-column">
+          <h3 class="middles-paragraph">FEELING STRESSED/ANXIOUS?</h3>
+          <p class="word">
+            The MindWell Anxiety and Depression Resource Guide is a comprehensive resource designed to help you better understand and cope with these complex and challenging conditions...
+          </p>
+          <button class="pdf-button" @click="downloadPdf">View and Download PDF</button>
+        </div>
+        <div class="rights-column">
+          <img src="https://nikilitha26.github.io/capstoneImages/OIP%20(1).jpeg" alt="Image 2">
+        </div>
       </div>
-      <div class="middles-column">
-        <h3 class="middles-paragraph">FEELING STRESSED/ANXIOUS?</h3>
-        <p class="word">The MindWell Anxiety and Depression Resource Guide is a comprehensive resource designed 
-          to help you better understand and cope with these complex and challenging conditions. This guide provides
-           a wealth of information on the causes, symptoms, and treatments for anxiety and depression, as well as
-            practical strategies for managing stress, improving communication, and improving overall well-being. 
-            Whether you are seeking to better understand your own experience with anxiety or depression, or are 
-            looking to support a loved one, this guide can help you take the first steps towards a happier, healthier life.</p>
-        <button class="pdf-button" @click="downloadPdf">View and Download PDF</button>
-      </div>
-      <div class="rights-column">
-        <img src="https://nikilitha26.github.io/capstoneImages/OIP%20(1).jpeg" alt="Image 2">
-      </div>
-    </div>
 
-    <div class="bottom-row">
-  <h3 class="avail">AVAILABLE SERVICES:</h3>
+      <div class="bottom-row">
+        <h3 class="avail">AVAILABLE SERVICES:</h3>
 
-  <div class="d-flex flex-wrap">
-    <div class="col-md-6">
-      <h3 class="category-title">CLINICAL PSYCHOLOGISTS</h3>
-      <div class="card-container">
-        <div class="card-slider">
-          <div v-for="(card, index) in cards" :key="index" class="card" :class="{ active: currentIndex === index }">
-            <img :src="card.image" class="card-img-top" alt="...">
-            <div class="card-body">
-              <h5 class="card-title">{{ card.title }}</h5>
-              <p class="card-text">{{ card.price }}</p>
+        <div class="d-flex flex-wrap">
+          <div class="col-md-6">
+            <h3 class="category-title">CLINICAL PSYCHOLOGISTS</h3>
+            <div class="card-container">
+              <div class="card-slider">
+                <div v-for="(card, index) in cards" :key="index" class="card" :class="{ active: currentIndex === index }">
+                  <img :src="card.image" class="card-img-top" alt="...">
+                  <div class="card-body">
+                    <h5 class="card-title">{{ card.title }}</h5>
+                    <p class="card-text">{{ card.price }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <h3 id="cat" class="category-title">COUNSELLORS</h3>
+            <div class="card-container">
+              <div class="card-slider">
+                <div v-for="(counsellor, index) in counsellors" :key="index" class="card" :class="{ active: counsellorIndex === index }">
+                  <img :src="counsellor.image" class="card-img-top" alt="...">
+                  <div class="card-body">
+                    <h5 class="card-title">{{ counsellor.title }}</h5>
+                    <p class="card-text">{{ counsellor.price }}</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
-    <div class="col-md-6">
-      <h3 id="cat" class="category-title">COUNSELLORS</h3>
-      <div class="card-container">
-        <div class="card-slider">
-          <div v-for="(counsellor, index) in counsellors" :key="index" class="card" :class="{ active: counsellorIndex === index }">
-            <img :src="counsellor.image" class="card-img-top" alt="...">
-            <div class="card-body">
-              <h5 class="card-title">{{ counsellor.title }}</h5>
-              <p class="card-text">{{ counsellor.price }}</p>
-            </div>
-          </div>
+
+        <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+          <button class="btn1" @click="$router.push('/products')">View More Products</button>
         </div>
       </div>
     </div>
-  </div>
-  <div class="d-grid gap-2 d-md-flex justify-content-md-center">
-    <button class="btn1" @click="$router.push('/products')">View More Products</button>
-  </div>
-</div>
   </div>
 </template>
+
 <script>
+import SpinnerComponent from '@/components/SpinnerComponent.vue';
 export default {
+  components: {
+    SpinnerComponent
+  },
   data() {
     return {
+      loading: true,
       imageUrl: 'https://nikilitha26.github.io/capstoneImages/pic.jpg',
       images: [
         { src: 'https://nikilitha26.github.io/capstoneImages/Dr%20Caitelin%20Dalwai.jpg', title: 'Dr. Caitelin Dalwai' },
@@ -103,50 +106,50 @@ export default {
         { image: 'https://nikilitha26.github.io/capstoneImages/Dr%20Caitelin%20Dalwai.jpg', title: 'Dr. Caitelin Dalwai', price: 'R800' },
         { image: 'https://nikilitha26.github.io/capstoneImages/Dr%20Frank%20Abudue.jpg', title: 'Dr. Frank Abudue', price: 'R900' },
         { image: 'https://nikilitha26.github.io/capstoneImages/Dr%20Candice%20Hendicks.jpg', title: 'Dr. Candice Hendicks', price: 'R1000' },
-        { image: 'https://nikilitha26.github.io/capstoneImages/Dr%20Chandre%20Davids.jpg', title: 'Dr. Chandre Davids', price: 'R1300'},
+        { image: 'https://nikilitha26.github.io/capstoneImages/Dr%20Chandre%20Davids.jpg', title: 'Dr. Chandre Davids', price: 'R1300' },
       ],
-      currentIndex: 0,
       counsellors: [
-      { image: 'https://nikilitha26.github.io/capstoneImages/Prof%20Charles%20Bennet.jpg', title: 'Dr. Charles Bennet', price: 'R750' },
-      { image: 'https://nikilitha26.github.io/capstoneImages/Dr%20Kylie%20Keet.jpg', title: 'Dr. Kylie Keet', price: 'R800' },
-      { image: 'https://nikilitha26.github.io/capstoneImages/Dr%20Richard%20Sterling.jpg', title: 'Dr. Richard Sterling', price: 'R800' },
-      { image: 'https://nikilitha26.github.io/capstoneImages/Dr%20Tyra%20Parring.jpg', title: 'Dr. Tyra Parring', price: 'R1000' },
-    ],
-    counsellorIndex: 0,
+        { image: 'https://nikilitha26.github.io/capstoneImages/Prof%20Charles%20Bennet.jpg', title: 'Dr. Charles Bennet', price: 'R750' },
+        { image: 'https://nikilitha26.github.io/capstoneImages/Dr%20Kylie%20Keet.jpg', title: 'Dr. Kylie Keet', price: 'R800' },
+        { image: 'https://nikilitha26.github.io/capstoneImages/Dr%20Richard%20Sterling.jpg', title: 'Dr. Richard Sterling', price: 'R800' },
+        { image: 'https://nikilitha26.github.io/capstoneImages/Dr%20Tyra%20Parring.jpg', title: 'Dr. Tyra Parring', price: 'R1000' },
+      ],
+      counsellorIndex: 0,
     }
   },
   methods: {
     downloadPdf() {
-    console.log('downloadPdf method called');
-    console.log('isLoggedIn:', this.$store.state.isLoggedIn);
-    console.log('User data:', this.$store.state.user);
-    if (!this.$store.state.user || !this.$store.state.user.length > 0) { 
-      console.log('User is not logged in, redirecting to login page');
-      this.$router.push('/login'); 
-      return;
+      if (!this.$store.state.user || !this.$store.state.user.length > 0) {
+        this.$router.push('/login');
+        return;
+      }
+      const pdfUrl = 'https://nikilitha26.github.io/capstoneImages/GuidelinesontheManagementofDepression[1].pdf';
+      const link = document.createElement('a');
+      link.href = pdfUrl;
+      link.download = 'pdf-file.pdf';
+      link.click();
     }
-    console.log('User is logged in, downloading PDF');
-    const pdfUrl = 'https://nikilitha26.github.io/capstoneImages/GuidelinesontheManagementofDepression[1].pdf';
-    const link = document.createElement('a');
-    link.href = pdfUrl;
-    link.download = 'pdf-file.pdf';
-    link.click();
-  }
-},
-
+  },
   mounted() {
+    setTimeout(() => {
+      this.loading = false;
+    }, 1000); // Adjust time if needed
+
     setInterval(() => {
-      this.currentIndex = (this.currentIndex + 1) % this.images.length
-    }, 2500) 
+      this.currentIndex = (this.currentIndex + 1) % this.images.length;
+    }, 2500);
+
     setInterval(() => {
-      this.currentIndex = (this.currentIndex + 1) % this.cards.length
-    }, 2500) 
+      this.currentIndex = (this.currentIndex + 1) % this.cards.length;
+    }, 2500);
+
     setInterval(() => {
-    this.counsellorIndex = (this.counsellorIndex + 1) % this.counsellors.length
-  }, 2500)
+      this.counsellorIndex = (this.counsellorIndex + 1) % this.counsellors.length;
+    }, 2500);
   }
 }
 </script>
+
 <style scoped>
 .home {
   height: auto;

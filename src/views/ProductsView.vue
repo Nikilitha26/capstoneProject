@@ -2,117 +2,140 @@
   <div class="products">
     <SpinnerComponent v-if="loading" />
 
-    <!-- Search and Sorting -->
-    <div class="search-sort-bar">
-      <div class="search-group">
-  <input
-    type="text"
-    v-model="searchQuery"
-    placeholder="Search products..."
-    class="form-control custom-search-input"
-  />
-  <button class="btn2 search-btn" @click="searchProducts">Search</button>
-</div>
+    <div v-else>
+      <!-- Search and Sorting -->
+      <div class="search-sort-bar">
+        <div class="search-group">
+          <input
+            type="text"
+            v-model="searchQuery"
+            placeholder="Search products..."
+            class="form-control custom-search-input"
+          />
+          <button class="btn2 search-btn" @click="searchProducts">Search</button>
+        </div>
 
-      <select v-model="sortOption" class="form-select form-select-sm">
-        <option value="name">Sort by Name</option>
-        <option value="category">Sort by Category</option>
-        <option value="price">Sort by Price</option>
-      </select>
-    </div>
+        <select v-model="sortOption" class="form-select form-select-sm">
+          <option value="name">Sort by Name</option>
+          <option value="category">Sort by Category</option>
+          <option value="price">Sort by Price</option>
+        </select>
+      </div>
 
-    <!-- Product Cards -->
-    <div v-if="$store.state.products">
-      <div class="card-container" v-if="sortedProducts.length > 0">
-        <div class="card-item" v-for="product in sortedProducts" :key="product.prodID">
-          <div class="card">
-            <img :src="product.prodUrl" class="card-img-top img-fluid" alt="Product Image">
-            <div class="card-body p-2">
-              <h3 class="card-title">{{ product.prodName }}</h3>
-              <h5 class="card-text">Category: {{ product.Category }}</h5>
-              <p class="card-text">Amount: {{ product.amount }}</p>
-            </div>
-            <div class="card-footer">
-              <button class="btn3" @click="viewMore(product.prodID)">View More</button>
-              <button class="btn4" @click="bookNow(product.prodID)">Book Now</button>
+      <!-- Product Cards -->
+      <div v-if="$store.state.products">
+        <div class="card-container" v-if="sortedProducts.length > 0">
+          <div
+            class="card-item"
+            v-for="product in sortedProducts"
+            :key="product.prodID"
+          >
+            <div class="card">
+              <img
+                :src="product.prodUrl"
+                class="card-img-top img-fluid"
+                alt="Product Image"
+              />
+              <div class="card-body p-2">
+                <h3 class="card-title">{{ product.prodName }}</h3>
+                <h5 class="card-text">Category: {{ product.Category }}</h5>
+                <p class="card-text">Amount: {{ product.amount }}</p>
+              </div>
+              <div class="card-footer">
+                <button class="btn3" @click="viewMore(product.prodID)">
+                  View More
+                </button>
+                <button class="btn4" @click="bookNow(product.prodID)">
+                  Book Now
+                </button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <div v-else>
-        <p>No results found for "{{ searchQuery }}".</p>
+        <div v-else>
+          <p>No results found for "{{ searchQuery }}".</p>
+        </div>
       </div>
     </div>
-    <div v-else>Loading products...</div>
   </div>
 </template>
 
 <script>
-import SpinnerComponent from '../components/SpinnerComponent.vue';
+import SpinnerComponent from "../components/SpinnerComponent.vue";
 
 export default {
+  components: {
+    SpinnerComponent,
+  },
   data() {
     return {
-      searchQuery: '',
-      sortOption: 'name',
+      searchQuery: "",
+      sortOption: "name",
       loading: true,
-    }
+    };
   },
   computed: {
     filteredProducts() {
-      return this.$store.state.products.filter(product =>
+      return this.$store.state.products.filter((product) =>
         product.prodName.toLowerCase().includes(this.searchQuery.toLowerCase())
       );
     },
     sortedProducts() {
       switch (this.sortOption) {
-        case 'name':
-          return this.filteredProducts.sort((a, b) => a.prodName.localeCompare(b.prodName));
-        case 'category':
-          return this.filteredProducts.sort((a, b) => a.Category.localeCompare(b.Category));
-        case 'price':
+        case "name":
+          return this.filteredProducts.sort((a, b) =>
+            a.prodName.localeCompare(b.prodName)
+          );
+        case "category":
+          return this.filteredProducts.sort((a, b) =>
+            a.Category.localeCompare(b.Category)
+          );
+        case "price":
           return this.filteredProducts.sort((a, b) => a.amount - b.amount);
         default:
           return this.filteredProducts;
       }
-    }
+    },
   },
   methods: {
-    getProducts() {
-      this.$store.dispatch('getProducts');
+    async getProducts() {
+      this.loading = true;
+      await this.$store.dispatch("getProducts");
+      this.loading = false;
     },
     viewMore(productId) {
-      this.$store.dispatch('getProduct', productId);
-      this.$router.push({ name: 'product', params: { id: productId } });
+      this.$store.dispatch("getProduct", productId);
+      this.$router.push({ name: "product", params: { id: productId } });
     },
     bookNow(productId) {
-      const existingProduct = this.$store.state.bookedProducts.find(product => product.prodID === productId);
+      const existingProduct = this.$store.state.bookedProducts.find(
+        (product) => product.prodID === productId
+      );
       if (existingProduct) {
-        this.$store.commit('updateBookedProductQuantity', {
+        this.$store.commit("updateBookedProductQuantity", {
           prodID: productId,
-          quantity: existingProduct.quantity + 1
+          quantity: existingProduct.quantity + 1,
         });
       } else {
-        this.$store.dispatch('getProduct', productId).then(product => {
-          this.$store.commit('setBookedProduct', product);
+        this.$store.dispatch("getProduct", productId).then((product) => {
+          this.$store.commit("setBookedProduct", product);
         });
       }
 
-      if (this.$cookies.get('token')) {
-        this.$router.push({ name: 'checkout', params: { prodID: productId } });
+      if (this.$cookies.get("token")) {
+        this.$router.push({ name: "checkout", params: { prodID: productId } });
       } else {
-        this.$router.push({ name: 'login' });
+        this.$router.push({ name: "login" });
       }
     },
     searchProducts() {
       this.getProducts();
-    }
+    },
   },
   mounted() {
     this.getProducts();
-    this.loading = false;
-  }
-}
+  },
+};
 </script>
 
 <style scoped>

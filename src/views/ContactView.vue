@@ -1,12 +1,14 @@
 <template>
   <div class="container">
-    <div class="row">
+    <SpinnerComponent v-if="loading" />
+
+    <div v-else class="row">
       <div class="col-md-4">
         <h2 class="contact">Contact Us</h2>
         <div style="margin-bottom: 40px;"></div>
         <ul class="list-unstyled">
           <li>
-            <i class="fas fa-phone animate__animated animate__headShake animate__infinite "></i>
+            <i class="fas fa-phone animate__animated animate__headShake animate__infinite"></i>
             <span>+27 82 402 1820</span>
           </li>
           <li>
@@ -23,36 +25,50 @@
           </li>
         </ul>
       </div>
+
       <div class="col-md-8">
         <h2 id="get">Get in Touch</h2>
         <form @submit.prevent="handleSubmit" action="https://formspree.io/f/xqazobnd" method="POST">
           <div class="form-group">
-    <label for="name">Name</label>
-    <input type="text" class="form-control" id="name" placeholder="Enter your name..." style="width: 70%" v-model="name">
-    <div v-if="errors.name" class="error">{{ errors.name }}</div>
-  </div>
-  <div class="form-group">
-    <label for="email">Email</label>
-    <input type="email" class="form-control" id="email" placeholder="Enter your email..." style="width: 70%" v-model="email">
-    <div v-if="errors.email" class="error">{{ errors.email }}</div>
-  </div>
-  <div class="form-group">
-    <label for="message">Message</label>
-    <textarea class="form-control" id="message" placeholder="Enter your message..." style="width: 70%" v-model="message"></textarea>
-    <div v-if="errors.message" class="error">{{ errors.message }}</div>
-  </div>
-          <button type="submit" class="btn0">Submit</button>
+            <label for="name">Name</label>
+            <input type="text" class="form-control" id="name" placeholder="Enter your name..." style="width: 70%" v-model="name">
+            <div v-if="errors.name" class="error">{{ errors.name }}</div>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" id="email" placeholder="Enter your email..." style="width: 70%" v-model="email">
+            <div v-if="errors.email" class="error">{{ errors.email }}</div>
+          </div>
+
+          <div class="form-group">
+            <label for="message">Message</label>
+            <textarea class="form-control" id="message" placeholder="Enter your message..." style="width: 70%" v-model="message"></textarea>
+            <div v-if="errors.message" class="error">{{ errors.message }}</div>
+          </div>
+
+          <button type="submit" class="btn0" :disabled="submitting">Submit</button>
         </form>
+
+        <!-- Show spinner when submitting -->
+        <SpinnerComponent v-if="submitting" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import SpinnerComponent from '@/components/SpinnerComponent.vue'
+
 export default {
   name: "ContactForm",
+  components: {
+    SpinnerComponent,
+  },
   data() {
     return {
+      loading: true,         // initial page load spinner
+      submitting: false,     // form submission spinner
       submitted: false,
       name: '',
       email: '',
@@ -60,30 +76,38 @@ export default {
       errors: {}
     }
   },
+  mounted() {
+    // Show page loading spinner for 2 seconds
+    setTimeout(() => {
+      this.loading = false
+    }, 2000)
+  },
   methods: {
     handleSubmit() {
       this.errors = {};
-      if (!this.name) {
-        this.errors.name = "Name is required";
-      }
-      if (!this.email) {
-        this.errors.email = "Email is required";
-      }
-      if (!this.message) {
-        this.errors.message = "Message is required";
-      }
+      if (!this.name) this.errors.name = "Name is required";
+      if (!this.email) this.errors.email = "Email is required";
+      if (!this.message) this.errors.message = "Message is required";
+
       if (Object.keys(this.errors).length === 0) {
-        this.name = '';
-        this.email = '';
-        this.message = '';
-        alert('Message submitted successfully!');
-        this.submitted = true;
-        this.$router.push({ name: 'home' });
+        this.submitting = true;
+
+        // Simulate a submission delay
+        setTimeout(() => {
+          this.submitting = false;
+          this.name = '';
+          this.email = '';
+          this.message = '';
+          this.submitted = true;
+          alert('Message submitted successfully!');
+          this.$router.push({ name: 'home' });
+        }, 2000);
       }
     }
   }
 }
 </script>
+
   
   <style scoped>
     .error {
@@ -95,6 +119,8 @@ export default {
   }
   
   .container {
+    position: relative;
+    top: 80px;
     width: 900px;
     margin: 40px auto;
     padding: 20px;
