@@ -658,12 +658,13 @@ export default {
     font-size: 18px;
     position: relative;
     right: 300px;
-    top: 0px;
+    top: -20px;
     /* margin-bottom: 50px; */
   }
   .lefts-column {
     position: relative;
     left: 40px;
+    top: 70px;
   }
   .lefts-column img {
     max-width: 200px;
