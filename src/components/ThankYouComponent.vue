@@ -1,7 +1,7 @@
 <template>
   <div class="thank-you-page">
     <h1>Thank you for booking with us! 🎀💌</h1>
-    <p>Your order has been successfully delivered.</p>
+    <p>Your order has been successfully sent.</p>
     <p>Order details:</p>
     <table v-if="product">
       <tr>
@@ -14,16 +14,16 @@
         <td>{{ product.prodID }}</td>
         <td><img :src="product.prodUrl" alt="Product Image" width="50" height="50"></td>
         <td>{{ product.prodName }}</td>
-        <td>{{ product.amount }}</td>
+        <td>R{{ product.amount }}</td>
       </tr>
       <tr>
         <th colspan="3">Total Purchase Price:</th>
-        <td>{{ product.quantity * product.amount }}</td>
+        <td>R{{ product.quantity * product.amount }}</td>
       </tr>
     </table>
     <p v-else>Loading...</p>
     <p>We appreciate your business and hope you will enjoy your session!</p>
-    <button class="btn"><router-link to="/">Return to home page</router-link></button>
+    <button class="btnn"><router-link to="/">Return to home page</router-link></button>
   </div>
 </template>
 
@@ -79,7 +79,7 @@ img {
   border-radius: 50%;
   margin: 10px;
 }
-.btn {
+.btnn {
   background-color: rgb(148, 118, 103);
   color: white;
   padding: 12px;
@@ -91,7 +91,9 @@ img {
   font-size: 17px;
 }
 
-.btn:hover {
-  background-color: rgba(148, 118, 103, 0.8); 
+.btnn:hover {
+  color:  rgba(148, 118, 103, 0.8);
+  background-color: white; 
+  border: solid 2px  rgba(148, 118, 103, 0.8);
 }
 </style>

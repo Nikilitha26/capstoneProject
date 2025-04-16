@@ -685,7 +685,7 @@ export default {
     position: relative;
     left: 40px;
   }
-  .rights-column img{
+  .rights-column img{ 
     position: relative;
     left: 25px;
     margin: 10px auto;
@@ -1064,8 +1064,8 @@ export default {
   }
   .explore-button {
     position: relative;
-    top: -20px;
-    margin-left: 120px;
+    top: -10px !important;
+    margin-left: 240px;
     padding: 10px;
   }
   .image-container {

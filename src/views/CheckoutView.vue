@@ -96,26 +96,29 @@ export default {
   },
   methods: {
     continueBooking() {
-      if (!this.checkInDate) {
-        this.dateTouched = true;
-        return;
-      }
+  if (!this.checkInDate) {
+    this.dateTouched = true;
+    return;
+  }
 
-      cookies.set('checkInDate', this.checkInDate);
+  cookies.set('checkInDate', this.checkInDate);
 
-      this.$store.dispatch('insertOrderDb', {
-        productId: this.products[0].prodID,
-        checkInDate: this.checkInDate,
-        userId: this.userId,
-      })
-        .then((response) => {
-          console.log('Order inserted successfully:', response);
-          this.$router.push({ name: 'payment', params: { prodID: this.products[0].prodID } });
-        })
-        .catch((error) => {
-          console.error('Error inserting order:', error);
-        });
-    },
+  const firstProduct = this.products[0];
+  console.log('Navigating to payment page for product:', firstProduct);
+
+  this.$store.dispatch('insertOrderDb', {
+    productId: firstProduct.prodID,
+    checkInDate: this.checkInDate,
+    userId: this.userId,
+  })
+    .then((response) => {
+      console.log('Order inserted successfully:', response);
+      this.$router.push({ name: 'payment', params: { prodID: firstProduct.prodID } });
+    })
+    .catch((error) => {
+      console.error('Error inserting order:', error);
+    });
+},
     deleteProduct(index) {
       this.$store.commit('deleteBookedProduct', index);
     },
@@ -143,7 +146,6 @@ export default {
   }
 }
 </script>
-
 
 <style scoped>
 .h1{

@@ -62,6 +62,7 @@
 
 <script>
 import SpinnerComponent from "../components/SpinnerComponent.vue";
+import Swal from "sweetalert2";
 
 export default {
   components: {
@@ -111,6 +112,7 @@ export default {
       const existingProduct = this.$store.state.bookedProducts.find(
         (product) => product.prodID === productId
       );
+
       if (existingProduct) {
         this.$store.commit("updateBookedProductQuantity", {
           prodID: productId,
@@ -121,6 +123,33 @@ export default {
           this.$store.commit("setBookedProduct", product);
         });
       }
+
+      // Show SweetAlert2 Booking Confirmation
+      Swal.fire({
+    title: "Booking Placed!",
+    text: "Your booking has been successfully added.",
+    icon: "success",
+    showConfirmButton: false,
+    timer: 2500,
+    timerProgressBar: true,
+    didOpen: () => {
+      // Apply custom brown color to all parts of the success icon
+      const icon = document.querySelector(".swal2-success-ring");
+      const check = document.querySelector(".swal2-success-line-tip");
+      const longLine = document.querySelector(".swal2-success-line-long");
+      const circle = document.querySelector(".swal2-success-circular-line");
+
+      if (icon) icon.style.borderColor = "rgb(148, 118, 103)"; 
+      if (check) check.style.backgroundColor = "rgb(148, 118, 103)";  
+      if (longLine) longLine.style.backgroundColor = "rgb(148, 118, 103)"; 
+      if (circle) circle.style.stroke = "rgb(148, 118, 103)";  
+
+      // Apply brown to the inner circle
+      const innerCircle = document.querySelector(".swal2-success-fix");
+      if (innerCircle) innerCircle.style.borderColor = "rgb(148, 118, 103)"; 
+    },
+  });
+
 
       if (this.$cookies.get("token")) {
         this.$router.push({ name: "checkout", params: { prodID: productId } });

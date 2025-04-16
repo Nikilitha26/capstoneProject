@@ -500,7 +500,7 @@ export default createStore({
           }
         });
         if (response.data.message) {
-          location.reload();
+          // location.reload();
           toast("Order saved successfully!", {
             "theme": "auto",
             "type": "default",
