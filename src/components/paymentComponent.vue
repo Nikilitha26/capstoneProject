@@ -76,8 +76,10 @@
   </div>
 </div>
 </template>
+
 <script>
-import axios from 'axios'
+import axios from 'axios';
+import Swal from 'sweetalert2';
 
 export default {
   data() {
@@ -96,26 +98,50 @@ export default {
       cvv: '',
       sameadr: false,
       formSubmitted: false,
-    }
+    };
   },
   mounted() {
     this.product = this.$route.params.product;
   },
   methods: {
-    proceedToPayment() {
-    this.formSubmitted = true;
-    if (!this.fullName || !this.email || !this.address || !this.city || !this.province || !this.zip || !this.cardName || !this.cardNumber || !this.expMonth || !this.expYear || !this.cvv) {
-      // Remove the alert and instead, do nothing or add a custom error message
-    } else if (!this.sameadr) {
-      alert('Please check the checkbox to confirm shipping address is the same as billing');
-    } else {
-      this.$router.push({ name: 'thankyou', params: { prodID: this.prodID } })
-    }
+    async proceedToPayment() {
+      this.formSubmitted = true;
 
+      const fieldsFilled = this.fullName && this.email && this.address && this.city &&
+        this.province && this.zip && this.cardName && this.cardNumber &&
+        this.expMonth && this.expYear && this.cvv;
+
+      if (!fieldsFilled) {
+        return;
+      }
+
+      if (!this.sameadr) {
+        await Swal.fire({
+          icon: 'warning',
+          title: 'Address Confirmation',
+          text: 'Please check the box to confirm shipping address is same as billing.',
+          timer: 2000,
+          showConfirmButton: false,
+          timerProgressBar: true
+        });
+        return;
+      }
+
+      await Swal.fire({
+        icon: 'success',
+        title: 'Payment Successful!',
+        text: 'Redirecting to thank you page...',
+        timer: 2000,
+        showConfirmButton: false,
+        timerProgressBar: true
+      });
+
+      this.$router.push({ name: 'thankyou', params: { prodID: this.prodID } });
     }
   }
-}
+};
 </script>
+
 <style scoped>
 .row {
   display: -ms-flexbox; 

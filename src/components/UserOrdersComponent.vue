@@ -91,6 +91,7 @@
 <script>
 import { mapState, mapActions } from 'vuex';
 import { Modal } from 'bootstrap'
+import Swal from 'sweetalert2';
 
 export default {
   data() {
@@ -103,6 +104,12 @@ export default {
       proceedToUpdateTriggered: false,
     }
   },
+  mounted() {
+  this.$nextTick(() => {
+    this.updateOrderModal = new Modal(this.$refs.updateOrderModal);
+    this.deleteOrderModal = new Modal(this.$refs.deleteOrderModal);
+  });
+},
   computed: {
     ...mapState(['orders', 'products']),
   orderProducts() {
@@ -132,12 +139,18 @@ created() {
       this.updateOrderModal.hide();
     },
     updateOrder() {
-      this.proceedToUpdateTriggered = true;
-      if (!this.selectedOrder.prodID || !this.selectedOrder.date) {
-        alert("Please fill in all fields.");
-        return;
-      }
     this.proceedToUpdateTriggered = true;
+    if (!this.selectedOrder.prodID || !this.selectedOrder.date) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops!',
+        text: 'Please fill in all fields.',
+        confirmButtonText: 'Close',
+        confirmButtonColor: 'rgb(148, 118, 103)'
+      });
+      return;
+    }
+    
     if (this.selectedOrder.prodID && this.selectedOrder.date) {
       const updatedOrder = {
         date: this.selectedOrder.date,
@@ -148,52 +161,85 @@ created() {
         updatedOrder
       })
       .then(() => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Order Updated!',
+          text: 'Your order has been successfully updated.',
+          confirmButtonText: 'Close',
+          confirmButtonColor: 'rgb(148, 118, 103)'
+        });
       })
       .catch(error => {
-        if (error.response.status === 404) {
-          console.error('Order not found');
-        } else {
-          console.error('Error updating order:', error);
-        }
+        Swal.fire({
+          icon: 'error',
+          title: 'Error!',
+          text: 'Error updating order. Please try again.',
+          confirmButtonText: 'Close',
+          confirmButtonColor: 'rgb(148, 118, 103)'
+        });
+        console.error('Error updating order:', error);
       });
       this.closeUpdateModal();
     }
   },
 
-    confirmDeleteOrder(orderID) {
-      const order = this.orders.find(order => order.orderID === orderID);
-      this.orderToDelete = order;
-      this.deleteOrderModal.show();
-    },
-    closeDeleteModal() {
-      this.deleteOrderModal.hide();
-    },
-    deleteOrder(orderID) {
-      console.log('Deleting order:', orderID);
-      this.$store.dispatch('deleteOrder', orderID);
-    }
+     // Open delete confirmation modal using SweetAlert
+  confirmDeleteOrder(orderID) {
+    const order = this.orders.find(order => order.orderID === orderID);
+    this.orderToDelete = order;
+    
+    // SweetAlert to confirm delete
+    Swal.fire({
+      title: 'Are you sure?',
+      text: `Do you really want to delete order #${this.orderToDelete.orderID}? This action cannot be undone.`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel',
+      confirmButtonColor: 'rgb(148, 118, 103)',
+      cancelButtonColor: 'rgb(148, 118, 103)'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.deleteOrder(orderID);
+      }
+    });
   },
-  mounted() {
-    try {
-      console.log('Getting all orders...');
-      this.getAllOrders();
-      console.log('Orders:', this.orders);
-      console.log('Vuex store:', this.$store.state);
-      this.updateOrderModal = new Modal(this.$refs.updateOrderModal);
-      this.deleteOrderModal = new Modal(this.$refs.deleteOrderModal);
-    } catch (error) {
-      console.error('Error getting all orders:', error);
-      this.$toast("Error getting all orders. Please try again.", {
-        "theme": "auto",
-        "type": "error",
-        "position": "top-center",
-        "dangerouslyHTMLString": true
+
+  // Close the modal without deleting (this will be handled by SweetAlert confirmation)
+  closeDeleteModal() {
+    this.deleteOrderModal.hide();
+  },
+
+  // Delete the order after confirmation
+  deleteOrder(orderID) {
+    this.$store.dispatch('deleteOrder', orderID)
+      .then(() => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Deleted!',
+          text: 'Your order has been deleted successfully.',
+          confirmButtonText: 'Close',
+          confirmButtonColor: 'rgb(148, 118, 103)',
+          allowOutsideClick: false,  
+          allowEscapeKey: false,   
+          timer: 3000,    
+          timerProgressBar: true,   
+        });
+      })
+      .catch(error => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error!',
+          text: 'There was an issue deleting the order. Please try again.',
+          confirmButtonText: 'Close',
+          confirmButtonColor: 'rgb(148, 118, 103)',
+          timer: 3000,    
+          timerProgressBar: true,   
+        });
+        console.error('Error deleting order:', error);
       });
-    }
-    // this.getOrders();
-    this.getProducts();
-    console.log('Products:', this.$store.state.products);
   }
+}
 }
 </script>
 <style>

@@ -109,52 +109,59 @@ export default {
       this.$router.push({ name: "product", params: { id: productId } });
     },
     bookNow(productId) {
-      const existingProduct = this.$store.state.bookedProducts.find(
-        (product) => product.prodID === productId
-      );
-
-      if (existingProduct) {
-        this.$store.commit("updateBookedProductQuantity", {
-          prodID: productId,
-          quantity: existingProduct.quantity + 1,
-        });
-      } else {
-        this.$store.dispatch("getProduct", productId).then((product) => {
-          this.$store.commit("setBookedProduct", product);
-        });
-      }
-
-      // Show SweetAlert2 Booking Confirmation
-      Swal.fire({
-    title: "Booking Placed!",
-    text: "Your booking has been successfully added.",
-    icon: "success",
-    showConfirmButton: false,
-    timer: 2500,
-    timerProgressBar: true,
-    didOpen: () => {
-      // Apply custom brown color to all parts of the success icon
-      const icon = document.querySelector(".swal2-success-ring");
-      const check = document.querySelector(".swal2-success-line-tip");
-      const longLine = document.querySelector(".swal2-success-line-long");
-      const circle = document.querySelector(".swal2-success-circular-line");
-
-      if (icon) icon.style.borderColor = "rgb(148, 118, 103)"; 
-      if (check) check.style.backgroundColor = "rgb(148, 118, 103)";  
-      if (longLine) longLine.style.backgroundColor = "rgb(148, 118, 103)"; 
-      if (circle) circle.style.stroke = "rgb(148, 118, 103)";  
-
-      // Apply brown to the inner circle
-      const innerCircle = document.querySelector(".swal2-success-fix");
-      if (innerCircle) innerCircle.style.borderColor = "rgb(148, 118, 103)"; 
-    },
-  });
-
-
       if (this.$cookies.get("token")) {
+        // Proceed with booking for logged-in user
+        const existingProduct = this.$store.state.bookedProducts.find(
+          (product) => product.prodID === productId
+        );
+
+        if (existingProduct) {
+          this.$store.commit("updateBookedProductQuantity", {
+            prodID: productId,
+            quantity: existingProduct.quantity + 1,
+          });
+        } else {
+          this.$store.dispatch("getProduct", productId).then((product) => {
+            this.$store.commit("setBookedProduct", product);
+          });
+        }
+
+        // Show success popup
+        Swal.fire({
+          title: "Booking Placed!",
+          text: "Your booking has been successfully added.",
+          icon: "success",
+          showConfirmButton: false,
+          timer: 2500,
+          timerProgressBar: true,
+          didOpen: () => {
+            const icon = document.querySelector(".swal2-success-ring");
+            const check = document.querySelector(".swal2-success-line-tip");
+            const longLine = document.querySelector(".swal2-success-line-long");
+            const circle = document.querySelector(".swal2-success-circular-line");
+
+            if (icon) icon.style.borderColor = "rgb(148, 118, 103)";
+            if (check) check.style.backgroundColor = "rgb(148, 118, 103)";
+            if (longLine) longLine.style.backgroundColor = "rgb(148, 118, 103)";
+            if (circle) circle.style.stroke = "rgb(148, 118, 103)";
+
+            const innerCircle = document.querySelector(".swal2-success-fix");
+            if (innerCircle) innerCircle.style.borderColor = "rgb(148, 118, 103)";
+          },
+        });
+
         this.$router.push({ name: "checkout", params: { prodID: productId } });
       } else {
-        this.$router.push({ name: "login" });
+        // Show login required popup and redirect
+        Swal.fire({
+          title: "Login Required",
+          text: "You must be logged in to book a product.",
+          icon: "warning",
+          confirmButtonText: "Login Now",
+          confirmButtonColor: "#a67c52",
+        }).then(() => {
+          this.$router.push({ name: "login" });
+        });
       }
     },
     searchProducts() {

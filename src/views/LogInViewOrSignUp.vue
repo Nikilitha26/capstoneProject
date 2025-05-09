@@ -76,6 +76,8 @@
 </template>
 
 <script>
+import Swal from "sweetalert2";
+
 export default {
   data() {
     return {
@@ -101,19 +103,26 @@ export default {
   methods: {
     async login() {
       try {
+        this.loginError = '';
+
         if (!this.loginForm.emailAdd || !this.loginForm.userPass) {
           this.loginError = 'Please enter both email and password';
           return;
         }
+
         if (!this.validateEmail(this.loginForm.emailAdd)) {
           this.loginError = 'Invalid email';
           return;
         }
+
         if (this.loginForm.userPass.length < 4) {
           this.loginError = 'Password must be at least 4 characters';
           return;
         }
+
         await this.$store.dispatch('loginUser', this.loginForm);
+
+
       } catch (error) {
         console.error(error);
         this.loginError = 'Invalid email or password';
@@ -131,12 +140,13 @@ export default {
       }
     },
     validateEmail(email) {
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    return emailRegex.test(email);
-  },
+      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      return emailRegex.test(email);
+    },
   }
 }
 </script>
+
 
 <style scoped>
 .container {

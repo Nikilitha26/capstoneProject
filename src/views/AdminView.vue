@@ -27,7 +27,7 @@
             <td>{{ product.Category }}</td>
             <td>{{ product.prodDescription }}</td>
             <td>{{ product.quantity}}</td>
-            <td>{{ product.amount }}</td>
+            <td>R{{ product.amount }}</td>
             <td>
               <button class="btn16" @click="editProduct(product)">Edit</button>
               <button class="btn16" @click="deleteProduct(product)">Delete</button>
@@ -48,35 +48,36 @@
       <div class="modal-body">
         <form @submit.prevent="addProduct">
           <div class="mb-3">
-  <label for="productName" class="form-label">Product Name:</label>
-  <input type="text" id="productName" v-model="newProduct.productName" class="form-control">
-  <span v-if="productNameError" class="error-message">{{ productNameError }}</span>
-</div>
-<div class="mb-3">
-  <label for="productDescription" class="form-label">Product Description:</label>
-  <textarea id="productDescription" v-model="newProduct.productDescription" class="form-control"></textarea>
-  <span v-if="productDescriptionError" class="error-message">{{ productDescriptionError }}</span>
-</div>
-<div class="mb-3">
-  <label for="productPrice" class="form-label">Product Price:</label>
-  <input type="number" id="productPrice" v-model="newProduct.productPrice" class="form-control">
-  <span v-if="productPriceError" class="error-message">{{ productPriceError }}</span>
-</div>
-<div class="mb-3">
-  <label for="productImage" class="form-label">Product Image:</label>
-  <input type="text" id="productImage" v-model="newProduct.productImage" class="form-control">
-  <span v-if="productImageError" class="error-message">{{ productImageError }}</span>
-</div>
-<div class="mb-3">
-  <label for="productQuantity" class="form-label">Product Quantity:</label>
-  <input type="number" id="productQuantity" v-model="newProduct.productQuantity" class="form-control">
-  <span v-if="productQuantityError" class="error-message">{{ productQuantityError }}</span>
-</div>
-<div class="mb-3">
-  <label for="productCategory" class="form-label">Product Category:</label>
-  <input type="text" id="productCategory" v-model="newProduct.productCategory" class="form-control">
-  <span v-if="productCategoryError" class="error-message">{{ productCategoryError }}</span>
-</div>
+            <label for="productName" class="form-label">Product Name:</label>
+            <input type="text" id="productName" v-model="newProduct.prodName" class="form-control">
+            <span v-show="productNameError" class="error-message text-danger">{{ productNameError }}</span>
+
+          </div>
+          <div class="mb-3">
+            <label for="productDescription" class="form-label">Product Description:</label>
+            <textarea id="productDescription" v-model="newProduct.prodDescription" class="form-control"></textarea>
+            <span v-if="productDescriptionError" class="error-message text-danger">{{ productDescriptionError }}</span>
+          </div>
+          <div class="mb-3">
+            <label for="productPrice" class="form-label">Product Price:</label>
+            <input type="number" id="productPrice" v-model="newProduct.amount" class="form-control">
+            <span v-if="productPriceError" class="error-message text-danger">{{ productPriceError }}</span>
+          </div>
+          <div class="mb-3">
+            <label for="productImage" class="form-label">Product Image:</label>
+            <input type="text" id="productImage" v-model="newProduct.prodUrl" class="form-control">
+            <span v-if="productImageError" class="error-message text-danger">{{ productImageError }}</span>
+          </div>
+          <div class="mb-3">
+            <label for="productQuantity" class="form-label">Product Quantity:</label>
+            <input type="number" id="productQuantity" v-model="newProduct.quantity" class="form-control">
+            <span v-if="productQuantityError" class="error-message text-danger">{{ productQuantityError }}</span>
+          </div>
+          <div class="mb-3">
+            <label for="productCategory" class="form-label">Product Category:</label>
+            <input type="text" id="productCategory" v-model="newProduct.Category" class="form-control">
+            <span v-if="productCategoryError" class="error-message text-danger">{{ productCategoryError }}</span>
+          </div>
           <button type="submit" class="btn16">Add Product</button>
         </form>
       </div>
@@ -331,6 +332,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import SpinnerComponent from '@/components/SpinnerComponent.vue'
+import Swal from 'sweetalert2';
 
 export default {
   name: 'AdminView',
@@ -354,6 +356,12 @@ export default {
       emailError: "",
       userProfileError: "",
       userPassError: "",
+      productNameError: "",
+    productDescriptionError: "",
+    productPriceError: "",
+    productImageError: "",
+    productQuantityError: "",
+    productCategoryError: "",
       newProduct: {
         prodName: '',
         prodDescription: '',
@@ -431,35 +439,83 @@ export default {
       console.log('showModal:', this.showModal);
     },
     showAddProductModal() {
-      this.showAddModal = true;
-      this.$nextTick(() => {
-        console.log('Modal should be visible now...');
-        document.querySelector('.modal').focus();
-      });
-    },
-    addProduct() {
-      if (!this.newProduct.prodName || !this.newProduct.prodDescription || !this.newProduct.amount || !this.newProduct.prodUrl || !this.newProduct.quantity || !this.newProduct.Category) {
-    alert("Please fill in all fields.");
+  this.showAddModal = true;
+
+  // Clear previous error messages when opening the modal
+  this.productNameError = "";
+  this.productDescriptionError = "";
+  this.productPriceError = "";
+  this.productImageError = "";
+  this.productQuantityError = "";
+  this.productCategoryError = "";
+
+  this.$nextTick(() => {
+    console.log('Modal should be visible now...');
+    document.querySelector('.modal').focus();
+  });
+},
+addProduct() {
+  // Clear previous errors
+  this.productNameError = "";
+  this.productDescriptionError = "";
+  this.productPriceError = "";
+  this.productImageError = "";
+  this.productQuantityError = "";
+  this.productCategoryError = "";
+
+  // Validation checks
+  if (!this.newProduct.prodName) {
+    this.productNameError = "Product name is required";
+  }
+  if (!this.newProduct.prodDescription) {
+    this.productDescriptionError = "Product description is required";
+  }
+  if (!this.newProduct.amount) {
+    this.productPriceError = "Product price is required";
+  }
+  if (!this.newProduct.prodUrl) {
+    this.productImageError = "Product image URL is required";
+  }
+  if (!this.newProduct.quantity) {
+    this.productQuantityError = "Product quantity is required";
+  }
+  if (!this.newProduct.Category) {
+    this.productCategoryError = "Product category is required";
+  }
+
+  // If there are any errors, stop and display the error messages
+  if (this.productNameError || this.productDescriptionError || this.productPriceError || this.productImageError || this.productQuantityError || this.productCategoryError) {
     return;
   }
-      console.log('Adding product...');
-      this.$store.dispatch('insertProduct', this.newProduct)
-        .then(() => {
-          console.log('Product added successfully!');
-          this.showAddModal = false;
-          this.newProduct = {
-            prodName: '',
-            prodDescription: '',
-            amount: 0,
-            prodUrl: '',
-            quantity: 0,
-            Category: '',
-          };
-        })
-        .catch((error) => {
-          console.error('Error adding product:', error);
-        });
-    },
+
+  console.log('Adding product...');
+  this.$store.dispatch('insertProduct', this.newProduct)
+    .then(() => {
+      console.log('Product added successfully!');
+      
+      // SweetAlert success message
+      Swal.fire({
+        icon: 'success',
+        title: 'Product Added!',
+        text: 'The product was added successfully.',
+        confirmButtonText: 'OK'
+      });
+
+      // Close modal and reset form
+      this.showAddModal = false;
+      this.newProduct = {
+        prodName: '',
+        prodDescription: '',
+        amount: 0,
+        prodUrl: '',
+        quantity: 0,
+        Category: '',
+      };
+    })
+    .catch((error) => {
+      console.error('Error adding product:', error);
+    });
+},
     editProduct(product) {
       this.editedProduct = { ...product };
       this.showEditModal = true;
@@ -478,11 +534,118 @@ export default {
       console.error('Error updating product:', error);
     });
 },
-    deleteProduct(product) {
-      this.showConfirmModal = true;
-      this.confirmModalText = `Product ${product.prodName}`;
-      this.confirmDeleteID = product.prodID;
+deleteProduct(product) {
+  // Ask for confirmation using SweetAlert
+  Swal.fire({
+    title: 'Are you sure?',
+    text: `Do you want to delete "${product.prodName}"?`,
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, delete it!',
+    cancelButtonText: 'Cancel',
+    background: 'white',
+    color: 'rgb(148, 118, 103)',
+    customClass: {
+      confirmButton: 'custom-swal-btn',
+      cancelButton: 'custom-swal-btn'
     },
+    didRender: () => {
+      const btn = Swal.getConfirmButton();
+      Object.assign(btn.style, {
+        backgroundColor: 'rgb(148, 118, 103)',
+        color: 'white',
+        border: 'none',
+        padding: '10px 20px',
+        fontSize: '1rem',
+        borderRadius: '0.5rem'
+      });
+      btn.onmouseover = () => btn.style.backgroundColor = 'rgb(148, 118, 103)';
+      btn.onmouseout = () => btn.style.backgroundColor = 'rgb(148, 118, 103)';
+
+      const cancelBtn = Swal.getCancelButton();
+      Object.assign(cancelBtn.style, {
+        backgroundColor: 'rgb(148, 118, 103)',
+        color: 'white',
+        border: 'none',
+        padding: '10px 20px',
+        fontSize: '1rem',
+        borderRadius: '0.5rem'
+      });
+      cancelBtn.onmouseover = () => cancelBtn.style.backgroundColor = 'rgb(148, 118, 103)';
+      cancelBtn.onmouseout = () => cancelBtn.style.backgroundColor = 'rgb(148, 118, 103)';
+    }
+  }).then((result) => {
+    if (result.isConfirmed) {
+      // Proceed to delete with valid product ID
+      this.deleteConfirmedProduct(product.prodID);
+    }
+  });
+},
+
+async deleteConfirmedProduct(prodID) {
+  if (!prodID) {
+    console.error('Error: Product ID is missing. Cannot proceed with deletion.');
+    return Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'Product ID is missing.',
+      background: 'white',
+      color: 'rgb(148, 118, 103)'
+    });
+  }
+
+  try {
+    Swal.fire({
+      title: 'Deleting...',
+      text: 'Please wait while the product is being deleted.',
+      showConfirmButton: false,
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      background: 'white',
+      color: 'rgb(148, 118, 103)',
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    });
+
+    await this.$store.dispatch('deleteProduct', prodID);
+
+    Swal.fire({
+      icon: 'success',
+      title: 'Deleted!',
+      text: 'Product has been deleted successfully.',
+      background: 'white',
+      color: 'rgb(148, 118, 103)',
+      confirmButtonText: 'OK',
+      didRender: () => {
+        const btn = Swal.getConfirmButton();
+        Object.assign(btn.style, {
+          backgroundColor: 'rgb(148, 118, 103)',
+          color: 'white',
+          border: 'none',
+          padding: '10px 20px',
+          fontSize: '1rem',
+          borderRadius: '0.5rem'
+        });
+        btn.onmouseover = () => btn.style.backgroundColor = 'rgb(148, 118, 103)';
+        btn.onmouseout = () => btn.style.backgroundColor = 'rgb(148, 118, 103)';
+      }
+    }).then(() => {
+      location.reload(); // Only reload after user sees message
+    });
+
+  } catch (error) {
+    console.error('Error deleting product:', error);
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'Failed to delete product. Please try again.',
+      background: 'white',
+      color: 'rgb(148, 118, 103)',
+      confirmButtonText: 'OK'
+    });
+  }
+},
     toggleAddUserModal() {
       this.showAddUserModalFlag = true;
     },
@@ -651,10 +814,107 @@ updateUser() {
     });
 },
 deleteUser(userID) {
-  this.showConfirmModal = true;
-  this.confirmModalText = `User with ID ${userID}`;
-  this.confirmDeleteID = userID;
+  if (!userID) {
+    console.error('User ID is missing.');
+    return Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'User ID is missing.',
+      background: 'white',
+      color: 'rgb(148, 118, 103)'
+    });
+  }
+
+  Swal.fire({
+    title: 'Are you sure?',
+    text: `Do you want to delete the user with ID ${userID}?`,
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, delete it!',
+    cancelButtonText: 'Cancel',
+    background: 'white',
+    color: 'rgb(148, 118, 103)',
+    customClass: {
+      confirmButton: 'custom-swal-btn',
+      cancelButton: 'custom-swal-btn'
+    },
+    didRender: () => {
+      const confirmBtn = Swal.getConfirmButton();
+      const cancelBtn = Swal.getCancelButton();
+      [confirmBtn, cancelBtn].forEach(btn => {
+        Object.assign(btn.style, {
+          backgroundColor: 'rgb(148, 118, 103)',
+          color: 'white',
+          border: 'none',
+          padding: '10px 20px',
+          fontSize: '1rem',
+          borderRadius: '0.5rem'
+        });
+        btn.onmouseover = () => btn.style.backgroundColor = 'rgb(148, 118, 103)';
+        btn.onmouseout = () => btn.style.backgroundColor = 'rgb(148, 118, 103)';
+      });
+    }
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.deleteConfirmedUser(userID);
+    }
+  });
 },
+
+async deleteConfirmedUser(userID) {
+  try {
+    Swal.fire({
+      title: 'Deleting...',
+      text: 'Please wait while the user is being deleted.',
+      showConfirmButton: false,
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      background: 'white',
+      color: 'rgb(148, 118, 103)',
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    });
+
+    await this.$store.dispatch('deleteUser', userID);
+
+    Swal.fire({
+      icon: 'success',
+      title: 'Deleted!',
+      text: 'User has been deleted successfully.',
+      background: 'white',
+      color: 'rgb(148, 118, 103)',
+      confirmButtonText: 'OK',
+      didRender: () => {
+        const btn = Swal.getConfirmButton();
+        Object.assign(btn.style, {
+          backgroundColor: 'rgb(148, 118, 103)',
+          color: 'white',
+          border: 'none',
+          padding: '10px 20px',
+          fontSize: '1rem',
+          borderRadius: '0.5rem'
+        });
+        btn.onmouseover = () => btn.style.backgroundColor = 'rgb(148, 118, 103)';
+        btn.onmouseout = () => btn.style.backgroundColor = 'rgb(148, 118, 103)';
+      }
+    }).then(() => {
+      location.reload(); // reload after success
+    });
+
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'Failed to delete user. Please try again.',
+      background: 'white',
+      color: 'rgb(148, 118, 103)',
+      confirmButtonText: 'OK'
+    });
+  }
+},
+
 confirmDelete() {
   if (this.confirmDeleteID) {
     if (this.confirmModalText.includes('Product')) {
@@ -683,11 +943,101 @@ updateOrder() {
 },
 
 deleteAdminOrder(orderId, userId) {
-  if (!userId) {
-    console.error('Error: userId is undefined');
-    return;
+  if (!userId || !orderId) {
+    console.error('Error: Missing orderId or userId.');
+    return Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'Order ID or User ID is missing.',
+      background: 'white',
+      color: 'rgb(148, 118, 103)'
+    });
   }
-  this.$store.dispatch('deleteAdminOrder', { orderId, userId });
+
+  Swal.fire({
+    title: 'Are you sure?',
+    text: `Do you want to delete Order ID ${orderId} for User ID ${userId}?`,
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, delete it!',
+    cancelButtonText: 'Cancel',
+    background: 'white',
+    color: 'rgb(148, 118, 103)',
+    customClass: {
+      confirmButton: 'custom-swal-btn',
+      cancelButton: 'custom-swal-btn'
+    },
+    didRender: () => {
+      const confirmBtn = Swal.getConfirmButton();
+      const cancelBtn = Swal.getCancelButton();
+      [confirmBtn, cancelBtn].forEach(btn => {
+        Object.assign(btn.style, {
+          backgroundColor: 'rgb(148, 118, 103)',
+          color: 'white',
+          border: 'none',
+          padding: '10px 20px',
+          fontSize: '1rem',
+          borderRadius: '0.5rem'
+        });
+        btn.onmouseover = () => btn.style.backgroundColor = 'rgb(148, 118, 103)';
+        btn.onmouseout = () => btn.style.backgroundColor = 'rgb(148, 118, 103)';
+      });
+    }
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      try {
+        Swal.fire({
+          title: 'Deleting...',
+          text: 'Please wait while the order is being deleted.',
+          showConfirmButton: false,
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          background: 'white',
+          color: 'rgb(148, 118, 103)',
+          didOpen: () => {
+            Swal.showLoading();
+          }
+        });
+
+        await this.$store.dispatch('deleteAdminOrder', { orderId, userId });
+
+        Swal.fire({
+          icon: 'success',
+          title: 'Deleted!',
+          text: 'Order has been deleted successfully.',
+          background: 'white',
+          color: 'rgb(148, 118, 103)',
+          confirmButtonText: 'OK',
+          didRender: () => {
+            const btn = Swal.getConfirmButton();
+            Object.assign(btn.style, {
+              backgroundColor: 'rgb(148, 118, 103)',
+              color: 'white',
+              border: 'none',
+              padding: '10px 20px',
+              fontSize: '1rem',
+              borderRadius: '0.5rem'
+            });
+            btn.onmouseover = () => btn.style.backgroundColor = 'rgb(148, 118, 103)';
+            btn.onmouseout = () => btn.style.backgroundColor = 'rgb(148, 118, 103)';
+          }
+        }).then(() => {
+          location.reload();
+        });
+
+      } catch (error) {
+        console.error('Error deleting order:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Failed to delete the order. Please try again.',
+          background: 'white',
+          color: 'rgb(148, 118, 103)',
+          confirmButtonText: 'OK'
+        });
+      }
+    }
+  });
 },
 
 confirmDelete() {
@@ -842,9 +1192,86 @@ img {
   border-radius: 50%;
 }
 
-.modal {
+/* .modal {
   display: block; 
+} */
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
 }
+
+.modal-content {
+  background-color: #fffaf5; 
+  border-radius: 10px;
+  padding: 30px;
+  width: 500px;
+  max-width: 90%;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  font-family: "Cormorant", serif;
+  border: 2px solid rgb(148, 118, 103);
+  position: relative;
+}
+
+.modal-header {
+  font-size: 22px;
+  font-weight: bold;
+  color: rgb(148, 118, 103);
+  margin-bottom: 20px;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 10px;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.modal .button,
+.modal .btn16,
+.modal .btn17 {
+  background-color: rgb(148, 118, 103);
+  color: white;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.modal .button:hover,
+.modal .btn16:hover,
+.modal .btn17:hover {
+  background-color: white;
+  color: rgb(148, 118, 103);
+  border: 1px solid rgb(148, 118, 103);
+}
+
+.close-btn {
+  position: absolute;
+  top: 12px;
+  right: 15px;
+  font-size: 20px;
+  color: #999;
+  cursor: pointer;
+}
+
+.close-btn:hover {
+  color: rgb(148, 118, 103);
+}
+
 
 .btn16{
   background-color: rgb(148, 118, 103);
