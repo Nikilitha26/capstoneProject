@@ -413,63 +413,60 @@ export default createStore({
     // Users
 
     async loginUser({ commit }, info) {
-      console.log(info);
+      console.log('[loginUser] Payload:', info);
       try {
         const response = await axios.post('https://capstoneproject-1-9k8p.onrender.com/users/login', info);
-        console.log(response);
-  
+        console.log('[loginUser] Response:', response);
+    
         const token = response.data.token;
         const refreshToken = response.data.refreshToken;
-        const userId = response.data.user.userID;
-        const userRole = response.data.user.userRole;
-  
+        const userId = response.data.user.userId; // FIXED from userID
+        const userRole = response.data.user.role; // FIXED from userRole
+    
+        // Commit to Vuex store
         commit('setToken', token);
         commit('setRefreshToken', refreshToken);
         commit('setUserId', userId);
         commit('setUserRole', userRole);
-        commit('setLoggedIn', false);
-  
+        commit('setLoggedIn', true); // FIXED from false
+    
+        // Store in cookies
         cookies.set('token', token);
         cookies.set('refreshToken', refreshToken);
         cookies.set('userId', userId);
-        if (userRole === 'Admin') {
-          cookies.set('role', 'Admin');
-        }
-  
-        console.log('Token:', token);
-        console.log('Refresh Token:', refreshToken);
-        console.log('UserId:', userId);
-        console.log('UserRole:', userRole);
-  
-        if (response.data.message) {
-          // Show SweetAlert2 success popup for 2 minutes
-          await Swal.fire({
-            title: "Login Successful",
-            text: "You have successfully logged in.",
-            icon: "success",
-            timer: 2000, // 2 minutes in milliseconds
-            timerProgressBar: true,
-            allowOutsideClick: false,
-            allowEscapeKey: false,
-            showConfirmButton: false,
-            didOpen: () => {
-              Swal.showLoading();
-            },
-            willClose: () => {
-              router.push('/');
-            }
-          });
-        } else {
-          // fallback redirect if no message (optional)
-          await router.push('/');
-        }
-  
+        cookies.set('role', userRole); // Always store the role
+    
+        console.log('[loginUser] Token:', token);
+        console.log('[loginUser] Refresh Token:', refreshToken);
+        console.log('[loginUser] UserId:', userId);
+        console.log('[loginUser] UserRole:', userRole);
+    
+        // Success feedback
+        await Swal.fire({
+          title: "Login Successful",
+          text: "You have successfully logged in.",
+          icon: "success",
+          timer: 2000,
+          timerProgressBar: true,
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          showConfirmButton: false,
+          didOpen: () => {
+            Swal.showLoading();
+          },
+          willClose: () => {
+            router.push('/');
+          }
+        });
+    
         return userId;
+    
       } catch (error) {
-        console.error(error);
+        console.error('[loginUser] Error:', error.response?.data || error.message);
+    
         await Swal.fire({
           title: "Login Failed",
-          text: "Please check your credentials and try again.",
+          text: error.response?.data?.error || "Please check your credentials and try again.",
           icon: "error",
           confirmButtonColor: "#944e37"
         });
