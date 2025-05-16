@@ -413,65 +413,55 @@ export default createStore({
     // Users
 
     async loginUser({ commit }, info) {
-      console.log('[loginUser] Payload:', info);
       try {
         const response = await axios.post('https://capstoneproject-1-9k8p.onrender.com/users/login', info);
-        console.log('[loginUser] Response:', response);
     
-        const token = response.data.token;
-        const refreshToken = response.data.refreshToken;
-        const userId = response.data.user.userId; // FIXED from userID
-        const userRole = response.data.user.role; // FIXED from userRole
+        // If login succeeds:
+        const { token, refreshToken, user } = response.data;
+        if (!user || !user.userID) throw new Error('User data missing in response');
     
-        // Commit to Vuex store
         commit('setToken', token);
         commit('setRefreshToken', refreshToken);
-        commit('setUserId', userId);
-        commit('setUserRole', userRole);
-        commit('setLoggedIn', true); // FIXED from false
+        commit('setUserId', user.userID);
+        commit('setUserRole', user.userRole);
+        commit('setLoggedIn', true);
     
-        // Store in cookies
+        // Save cookies
         cookies.set('token', token);
         cookies.set('refreshToken', refreshToken);
-        cookies.set('userId', userId);
-        cookies.set('role', userRole); // Always store the role
+        cookies.set('userId', user.userID);
+        if (user.userRole === 'Admin') cookies.set('role', 'Admin');
     
-        console.log('[loginUser] Token:', token);
-        console.log('[loginUser] Refresh Token:', refreshToken);
-        console.log('[loginUser] UserId:', userId);
-        console.log('[loginUser] UserRole:', userRole);
-    
-        // Success feedback
         await Swal.fire({
           title: "Login Successful",
-          text: "You have successfully logged in.",
           icon: "success",
           timer: 2000,
-          timerProgressBar: true,
-          allowOutsideClick: false,
-          allowEscapeKey: false,
           showConfirmButton: false,
-          didOpen: () => {
-            Swal.showLoading();
-          },
-          willClose: () => {
-            router.push('/');
-          }
+          timerProgressBar: true
         });
     
-        return userId;
+        router.push('/');
+        return user.userID;
     
       } catch (error) {
-        console.error('[loginUser] Error:', error.response?.data || error.message);
-    
-        await Swal.fire({
-          title: "Login Failed",
-          text: error.response?.data?.error || "Please check your credentials and try again.",
-          icon: "error",
-          confirmButtonColor: "#944e37"
-        });
+        if (error.response && error.response.status === 401) {
+          await Swal.fire({
+            title: "Login Failed",
+            text: "Invalid email or password.",
+            icon: "error",
+            confirmButtonColor: "#944e37"
+          });
+        } else {
+          await Swal.fire({
+            title: "Error",
+            text: "An unexpected error occurred.",
+            icon: "error",
+            confirmButtonColor: "#944e37"
+          });
+        }
+        return null;
       }
-    },
+    },    
     
     async signupUser({ commit }, info) {
       try {
