@@ -7,7 +7,16 @@
         <div class="left-column">
           <h1 class="welcome-heading">Welcome to MindWell!</h1>
           <p class="welcome-paragraph">
-            We are dedicated to providing compassionate, evidence-based mental health care to individuals and families across South Africa. Whether you are located in Cape Town, Durban, Johannesburg, or Pretoria, our team of experienced psychologists and counselors is here to help you find the support and guidance you need to achieve optimal well-being. With a wide range of expertise in areas such as anxiety, depression, addiction, and relationship issues, we are committed to helping our clients reach their personal goals and live their best lives. Thank you for choosing MindWell as your partner on your journey towards mental health and wellness.
+            We are dedicated to providing compassionate, evidence-based mental 
+            health care to individuals and families across South Africa. 
+            Whether you are located in Cape Town, Durban, Johannesburg, or Pretoria,
+            our team of experienced psychologists and counselors is here to help
+            you find the support and guidance you need to achieve optimal well-being. 
+            With a wide range of expertise in areas such as anxiety, depression,
+            addiction, and relationship issues, we are committed to helping our
+            clients reach their personal goals and live their best lives.
+            Thank you for choosing MindWell as your partner on your journey
+            towards mental health and wellness.
           </p>
           <button class="explore-button" @click="$router.push('/products')">Explore More</button>
         </div>
@@ -250,7 +259,8 @@ export default {
   margin-bottom: 40px;
   color: #fff; 
   position: relative;
-  left: 40px;
+  left: 200px;
+  margin-left: 80px;
 }
 
 .image-container img.active + .image-title-container .image-title {
@@ -263,7 +273,8 @@ export default {
   margin-bottom: 40px;
   color: #fff; 
   position: relative;
-  left: 50px;
+  left: 150px;
+  margin-left: 60px;
   font-family: "Cormorant", serif;
   font-optical-sizing: auto;
   font-weight: 1000;
@@ -282,7 +293,7 @@ export default {
   cursor: pointer;
   position: relative;
   top: 20px;
-  margin-left: 100px;
+  margin-left: 200px;
   border-radius: 5px;
 }
 
