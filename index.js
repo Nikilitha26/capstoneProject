@@ -11,7 +11,7 @@ let PORT = process.env.PORT || 5005;
 const app = express();
 
 app.use(cors({
-    origin: ['http://localhost:8080', 'https://capstoneproject-dcb91.web.app'],
+    origin: ['http://localhost:8080', 'https://capstoneproject-dcb91.web.app', 'http://localhost:8081'],
     credentials: true,
     headers: ['Content-Type', 'Authorization', 'Access-Control-Allow-Origin']
   }));
@@ -23,7 +23,7 @@ app.use('/users', usersRouter);
 app.use('/products', productsRouter);
 app.post('/users/login', (req, res) => {
 
-  res.header('Access-Control-Allow-Origin', 'http://localhost:8080');
+  res.header('Access-Control-Allow-Origin', 'http://localhost:8080', 'http://localhost:8081');
 
 });
 
