@@ -412,56 +412,66 @@ export default createStore({
       
     // Users
 
-    async loginUser({ commit }, info) {
+    async loginUser({ commit }, loginInfo) {
       try {
-        const response = await axios.post('https://capstoneproject-1-9k8p.onrender.com/users/login', info);
-    
-        // If login succeeds:
-        const { token, refreshToken, user } = response.data;
-        if (!user || !user.userID) throw new Error('User data missing in response');
-    
-        commit('setToken', token);
-        commit('setRefreshToken', refreshToken);
-        commit('setUserId', user.userID);
-        commit('setUserRole', user.userRole);
-        commit('setLoggedIn', true);
-    
-        // Save cookies
-        cookies.set('token', token);
-        cookies.set('refreshToken', refreshToken);
-        cookies.set('userId', user.userID);
-        if (user.userRole === 'Admin') cookies.set('role', 'Admin');
-    
+        // Send login request with expected payload
+        // Make sure loginInfo has { emailAdd, userPass }
+        const response = await axios.post('https://capstoneproject-1-9k8p.onrender.com/users/login', loginInfo)
+  
+        const token = response.data.token
+        const refreshToken = response.data.refreshToken
+        const userId = response.data.user.userID
+        const userRole = response.data.user.userRole
+  
+        // Commit to Vuex state
+        commit('setToken', token)
+        commit('setRefreshToken', refreshToken)
+        commit('setUserId', userId)
+        commit('setUserRole', userRole)
+        commit('setLoggedIn', true)
+  
+        // Store tokens in cookies/localStorage
+        cookies.set('token', token)
+        cookies.set('refreshToken', refreshToken)
+        cookies.set('userId', userId)
+        if (userRole === 'Admin') {
+          cookies.set('role', 'Admin')
+        } else {
+          cookies.remove('role')
+        }
+  
+        // Show success alert then redirect
         await Swal.fire({
           title: "Login Successful",
+          text: "Welcome back!",
           icon: "success",
           timer: 2000,
+          timerProgressBar: true,
           showConfirmButton: false,
-          timerProgressBar: true
-        });
-    
-        router.push('/');
-        return user.userID;
-    
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          didOpen: () => Swal.showLoading(),
+          willClose: () => router.push('/')
+        })
+  
+        return userId
+  
       } catch (error) {
-        if (error.response && error.response.status === 401) {
-          await Swal.fire({
-            title: "Login Failed",
-            text: "Invalid email or password.",
-            icon: "error",
-            confirmButtonColor: "#944e37"
-          });
-        } else {
-          await Swal.fire({
-            title: "Error",
-            text: "An unexpected error occurred.",
-            icon: "error",
-            confirmButtonColor: "#944e37"
-          });
-        }
-        return null;
+        // Login failed - show alert with backend error message if present
+        const message = error.response?.data?.error || 'Login failed. Please check your credentials.'
+  
+        await Swal.fire({
+          title: "Login Failed",
+          text: message,
+          icon: "error",
+          confirmButtonColor: "#944e37"
+        })
+  
+        // Optionally clear tokens or state here if needed
+  
+        throw error
       }
-    },    
+    },
     
     async signupUser({ commit }, info) {
       try {
