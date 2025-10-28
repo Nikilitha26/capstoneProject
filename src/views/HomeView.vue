@@ -20,7 +20,7 @@
           </p>
           <button class="explore-button" @click="$router.push('/products')">Explore More</button>
         </div>
-        <div class="right-column">
+        <!-- <div class="right-column">
           <div class="image-container">
             <div v-for="(image, index) in images" :key="index" class="image-wrapper">
               <img :src="image.src" :class="{ active: currentIndex === index }" />
@@ -29,7 +29,7 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
 
       <div class="middle-row">

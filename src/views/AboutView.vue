@@ -36,7 +36,7 @@
 
         <div class="our-team">
           <div class="team-member">
-            <img id="piccc" src="https://nikilitha26.github.io/Boot-img/Image/IMG_8063.PNG" alt="Team Member 1">
+            <img id="piccc" src="https://nikilitha26.github.io/vue.jsImages/IMG_1283%20(1).jpg" alt="Team Member 1">
             <div class="team-info">
               <h3 class="h3">Nikilitha Kakaza</h3>
               <p class="founder">Founder & CEO</p>
@@ -89,6 +89,10 @@ export default {
 </script>
 
 <style scoped>
+  /* .about {
+    margin: 50px;
+    height: auto;
+  } */
   .about img {
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); 
@@ -119,6 +123,8 @@ export default {
 
 #back{
   height: 140vh;
+  position: relative;
+  top: 70px;  
 }
 .founder{
   margin-right: 90px;
