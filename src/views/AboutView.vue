@@ -7,7 +7,7 @@
 
     <!-- Main Content -->
     <div v-else>
-      <div class="div" style="background-color: white; padding: 10px; display: flex;">
+      <div class="div" style="background-color: white; padding: 10px; display: flex; position: relative; top: 50px;">
         <div style="width: 50%; margin-right: 20px;">
           <img id="foto" src="https://nikilitha26.github.io/capstoneImages/landing.jpg" alt="About Us Image" style="width: 100%; height: 480px;">
         </div>
@@ -124,7 +124,7 @@ export default {
 #back{
   height: 140vh;
   position: relative;
-  top: 70px;  
+  top: 150px;  
 }
 .founder{
   margin-right: 90px;
